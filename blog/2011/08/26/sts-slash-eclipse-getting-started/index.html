@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cloud Foundry Documentation: STS/Eclipse Getting Started</title>
+  <meta name="author" content="Karen Zeller">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://yoursite.com/blog/2011/08/26/sts-slash-eclipse-getting-started/"/>
+  <link href="/favicon.png" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Cloud Foundry Documentation" type="application/atom+xml"/>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body  >
+  <header><hgroup>
+  <h1><a href="/">Cloud Foundry Documentation</a></h1>
+  
+    <h2>Deploy and Scale Your Application in Seconds</h2>
+  
+</hgroup>
+
+</header>
+  <nav role=navigation><ul role=subscription data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+<form action="http://google.com/search" method="get">
+  <fieldset role="site-search">
+    <input type="hidden" name="q" value="site:yoursite.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+<ul role=main-navigation>
+	<li><a href="/blog/archives">Documentation</a></li>
+  <li><a href="http://support.cloudfoundry.com/home" target="_blank">Support</a></li>
+
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry">
+  
+  <header>
+    
+      <h1 class="entry-title">STS/Eclipse Getting Started</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-08-26 10:22:00 -0700" pubdate  updated >Aug 26<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>VMware Cloud Foundry for Eclipse and STS</h2>
+
+<p>For those developing in Java, Cloud Foundry provides a plug-in that works with the Eclipse IDE (Integrated Development Environment) and SpringSource Tool Suite (STS). This describes how to install the plug-in and how to deploy an application using Eclipse or STS.</p>
+
+<h2>Prerequisites</h2>
+
+<p>If you don&#8217;t already have STS or Eclipse installed, do so now:</p>
+
+<ul>
+<li><p><a href="http://www.eclipse.org/downloads/">Eclipse download</a></p>
+
+<blockquote><p>Confirm that you have Eclipse IDE for JEE Developers so that all known dependencies are satisfied.</p></blockquote></li>
+<li><p><a href="http://www.springsource.com/downloads/sts">SpringSource Tool suite download</a></p>
+
+<blockquote><p>For STS you will want to have an install version of 2.6.1 or higher.</p></blockquote></li>
+</ul>
+
+
+<h2>Installation</h2>
+
+<h3>STS Extension Install</h3>
+
+<p>After you confirm the installed STS, open the tool and follow these steps:</p>
+
+<ol>
+<li><p>Select Help > Dashboard.</p>
+
+<blockquote><p>The Dashboard will open.</p></blockquote></li>
+<li><p>Click on the Extensions Tab.</p>
+
+<blockquote><p>A list of extensions will load and display.</p></blockquote></li>
+<li><p>Select Cloud Foundry Integration under the Server and Clouds category.</p>
+
+<p><img src="/assets/images/screenshots/sts_extens_cf.jpg" title="sts CF extensions" alt="sts CF extensions" /></p></li>
+<li><p>Click Install</p>
+
+<blockquote><p>An install wizard appears where you follow the steps provided.</p></blockquote>
+
+<p><img src="/assets/images/screenshots/sts_install_wiz.jpg" title="sts CF install" alt="sts CF install" /></p></li>
+<li><p>Restart STS</p>
+
+<blockquote><p>You are ready to connect to Cloud Foundry&#8217;s cloud.</p></blockquote>
+
+<p><img src="/assets/images/screenshots/sts_extension.jpg" title="sts extensions install" alt="sts extensions install" /></p></li>
+</ol>
+
+
+<h3>Eclipse Marketplace Install</h3>
+
+<p>In Eclipse, do the following:</p>
+
+<ol>
+<li><p>Select Help > Eclipse Marketplace.</p>
+
+<blockquote><p>A panel opens showing different plug-ins and add-ons.</p></blockquote></li>
+<li><p>Enter &#8216;cloud foundry&#8217; under Find.</p>
+
+<pre><code>![eclipse install](/assets/images/screenshots/eclipse_mkt.jpg "eclipse install")
+</code></pre></li>
+<li><p>In the search results select Cloud Foundry Integration.</p></li>
+<li><p>Click Install</p>
+
+<blockquote><p>An install wizard appears where you follow the steps provided.</p></blockquote></li>
+<li><p>After the finish installing, restart Eclipse.</p>
+
+<blockquote><p>You are ready to connect to Cloud Foundry&#8217;s cloud.</p></blockquote></li>
+</ol>
+
+
+<h2>Deploying Applications</h2>
+
+<p>The plug-in integrates STS and Eclipse via Web Tools Project (WTP) Server infrastructure, which is commonly used to deploy Java web applications to remote servers.</p>
+
+<h3>Connecting to Cloud Foundry</h3>
+
+<p>In Eclipse or STS you start by creating a new server. This server represents your Cloud Foundry account and you can connect to Cloud Foundry with it:</p>
+
+<ol>
+<li><p>Select Window > Show view&#8230; > Other&#8230; > Servers.</p>
+
+<p><img src="/assets/images/screenshots/sts_deploy.jpg" title="deploy via sts" alt="deploy via sts" /></p></li>
+<li><p>Right click in the Servers view and select New > Server.</p>
+
+<blockquote><p>A wizard will open where you set up the server.</p></blockquote></li>
+<li><p>Under the VMware category, select Cloud Foundry.</p>
+
+<p><img src="/assets/images/screenshots/sts_cf_server.jpg" title="sts cf new server" alt="sts cf new server" /></p></li>
+<li><p>Click Next</p></li>
+<li><p>Enter your username/email and password you received from Cloud Foundry:</p></li>
+</ol>
+
+
+<p><img src="/assets/images/screenshots/sts_cf_cred.jpg" title="sts cf new server credentials" alt="sts cf new server credentials" /></p>
+
+<ol>
+<li><p>Select the cloud you want to connect to.</p>
+
+<blockquote><p>If you want to connect to your Cloud Foundry cloud, under URL choose VMware Cloud Foundry – http://api.cloudfoundry.com
+<em>Note you could also choose a local installation of Cloud Foundry at this point.</em></p></blockquote></li>
+<li><p>Click Validate Account to test the connection.</p>
+
+<p><img src="/assets/images/screenshots/sts_new_server.jpg" title="connecting via WTP" alt="connect via wtp" /></p></li>
+<li><p>Click Finish.</p>
+
+<blockquote><p>The plug-in establishes the connection to Cloud Foundry. You can see your deployed applications under Cloud Foundry server node in the Servers view.</p></blockquote></li>
+</ol>
+
+
+<h3>Adding and Starting Applications</h3>
+
+<ol>
+<li><p>Add the Application. To add it to your cloud you can either:</p>
+
+<ul>
+<li>Drag and drop the application&#8217;s listing in your IDE onto the Cloud Foundry server in the Servers panel, or</li>
+<li>In the Servers panel, open that servers context menu by right-clicking and select Add and Remove&#8230;</li>
+</ul>
+</li>
+<li><p>Start the Application. Right click the application in the Servers panel and select Start.</p>
+
+<blockquote><p>A wizard appears where you can provide the application name, select a URL and allocate memory to the application.</p></blockquote></li>
+<li><p>Click Finish. The plug-in uploads and starts your application on the cloud.</p></li>
+<li><p>Checking Status. Double-click the application in the Servers panel.</p>
+
+<blockquote><p>The Server Editor appears and displays information specific to your application on the cloud.</p></blockquote></li>
+</ol>
+
+
+<h3>Provisioning Services</h3>
+
+<p>To provision services which will in turn be available to your application:</p>
+
+<ol>
+<li><p>In the Servers panel, double click on any application name.</p>
+
+<blockquote><p>STS activates the Package Explorer tab as navigation and then the Applications tab in the workspace.</p>
+
+<p>The Applications tab lists all the applications plus details about the selected application.</p></blockquote></li>
+<li><p>In the Services Section, click Add service.</p>
+
+<p><img src="/assets/images/screenshots/sts_new_svc.jpg" title="sts add service" alt="sts add service" /></p></li>
+<li><p>Provide a name for the new service.</p></li>
+<li><p>Select the service type (MySQL, Redis, MongoDB, RabbitMQ)</p>
+
+<p><img src="/assets/images/screenshots/sts_create_svcs.jpg" title="sts create service" alt="sts create service" /></p></li>
+</ol>
+
+
+<p>The plug-in request the service from Cloud Foundry and it appears in the Services section under the Applications tab.</p>
+
+<h3>Binding Services to Your App</h3>
+
+<p>To provision and bind services to your application:</p>
+
+<ol>
+<li><p>Stop your application:</p>
+
+<ul>
+<li><p>In the Server panel, right-click on the application name then select Stop, or</p></li>
+<li><p>In the Applications panel, select the application and click Stop</p></li>
+</ul>
+</li>
+<li><p>In the Applications panel, select the application you want to add a service to.</p></li>
+<li><p>Drag and drop a listed service to the Application Services table</p>
+
+<p><img src="/assets/images/screenshots/sts_bind_svc.jpg" title="sts bind service" alt="sts bind service" /></p></li>
+<li><p>Click Restart.</p></li>
+</ol>
+
+
+<h3>Remote File Access</h3>
+
+<p>To access files from your application that are remote:</p>
+
+<ol>
+<li><p>Open Server Editor.</p></li>
+<li><p>Under the Application Details pane, click Remote Systems View.</p>
+
+<p><img src="/assets/images/screenshots/sts_remote_sys.jpg" title="sts remote files" alt="sts remote files" /></p>
+
+<blockquote><p>The Remote Systems tab appears below the workspace displaying remote resources.</p></blockquote></li>
+<li><p>Browse the file tree and open files.</p>
+
+<p><img src="/assets/images/screenshots/sts_file_access.jpg" title="file access via sts" alt="sts remote file access" /></p></li>
+</ol>
+
+
+<h1>Where to Go Next</h1>
+
+<p>You&#8217;re ready to move on and learn more about the brave new world of Cloud Foundry. Here are other documents that will help you get up to speed:</p>
+
+<ul>
+<li><p>Cloud Foundry Services Guide</p></li>
+<li><p>Micro Cloud Foundry Getting Started</p></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Karen Zeller</span></span>
+
+      
+
+
+
+
+<time datetime="2011-08-26 10:22:00 -0700" pubdate  updated >Aug 26<span>th</span>, 2011</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yoursite.com/blog/2011/08/26/sts-slash-eclipse-getting-started/" data-via="" data-counturl="http://yoursite.com/blog/2011/08/26/sts-slash-eclipse-getting-started/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
+</article>
+
+</div>
+
+<aside role=sidebar>
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/using-cloud-foundry-services/">Using Cloud Foundry Services</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/rails-and-sinatra-for-cloud-foundry/">Rails for Cloud Foundry</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/vmc-cheatsheet/">vmc: Cheatsheet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/micro-cloud-readme/">Micro Cloud README</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/micro-cloud-foundry-getting-started/">Micro Cloud Foundry Getting Started</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer><p>
+  Copyright &copy; 2011 -  <span class="credit"><a href="http://cloudfoundry.com/">Cloud Foundry</a></span> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+</body>
+</html>
