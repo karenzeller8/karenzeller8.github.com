@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cloud Foundry Documentation: vmc: Cheatsheet</title>
+  <meta name="author" content="Karen Zeller">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://yoursite.com/blog/2011/08/26/vmc-cheatsheet/"/>
+  <link href="/favicon.png" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Cloud Foundry Documentation" type="application/atom+xml"/>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body  >
+  <header><hgroup>
+  <h1><a href="/">Cloud Foundry Documentation</a></h1>
+  
+    <h2>Deploy and Scale Your Application in Seconds</h2>
+  
+</hgroup>
+
+</header>
+  <nav role=navigation><ul role=subscription data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+<form action="http://google.com/search" method="get">
+  <fieldset role="site-search">
+    <input type="hidden" name="q" value="site:yoursite.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+<ul role=main-navigation>
+	<li><a href="/blog/archives">Documentation</a></li>
+  <li><a href="http://support.cloudfoundry.com/home">Support</a></li>
+
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry">
+  
+  <header>
+    
+      <h1 class="entry-title">Vmc: Cheatsheet</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-08-26 10:31:00 -0700" pubdate  updated >Aug 26<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>A Practical vmc Guide at a Glance</h2>
+
+<p>Notes extracted from <a href="http://support.cloudfoundry.com/">Cloud Foundry Support</a>.</p>
+
+<p>For more information: vmc -h, or vmc help.</p>
+
+<h3>General Account</h3>
+
+<p>Identify yourself to Cloud Foundry&#8217;s cloud with your account information:</p>
+
+<ul>
+<li>vmc login youremail@email.com &#8211;passwd yourpassword</li>
+<li>vmc login &#8211;email youremail@email.com &#8211;passwd yourpassword</li>
+<li><p>vmc passwd</p>
+
+<blockquote><p>Change your password.</p></blockquote></li>
+<li><p>vmc logout</p></li>
+</ul>
+
+
+<h3>Updating vmc</h3>
+
+<p>vmc is provided as a Ruby gem is often updated with new commands and options, so be sure you have the latest version, at the command line:</p>
+
+<pre><code>    gem update vmc
+</code></pre>
+
+<h3>Non-Interactive/Suppressing Prompts</h3>
+
+<p>By default vmc operates in an interactive mode and many operations will follow-up with multiple prompts asking for options. To use vmc in interactive mode and provide options in the command itself:</p>
+
+<ul>
+<li><p>vmc <em>command</em> -n &#8211;options</p>
+
+<blockquote><p>Example: vmc push app -n will push the application to the cloud and take all defaults without prompting.</p></blockquote></li>
+<li><p>vmc help options</p>
+
+<blockquote><p>Displays commands and all options which can be used as parameters on the command line</p></blockquote></li>
+</ul>
+
+
+<h3>Configuration</h3>
+
+<ul>
+<li><p>vmc target</p>
+
+<blockquote><p>Displays URL for cloud targeted by vmc client.</p></blockquote></li>
+<li><p>vmc target <em>url</em></p>
+
+<blockquote><p>Successfully targeted to [http://api.cloudfoundry.com]</p></blockquote></li>
+<li><p>vmc info</p>
+
+<blockquote><p>Confirms target cloud, vmc client, user and usage.</p></blockquote></li>
+<li><p>vmc apps</p>
+
+<blockquote><p>Lists applications for your account, number of instances, running/stopped, URLs, and associated services.</p></blockquote></li>
+</ul>
+
+
+<h3>Deploying and Application</h3>
+
+<ul>
+<li><p>vmc push</p>
+
+<blockquote><p>Executed in the directory containing your application; asks for application name, URL, application type, memory allocation, and whether any services will be bound to it. Pushes an application up to the cloud, stages and starts it.</p></blockquote></li>
+<li><p>vmc push appname</p></li>
+</ul>
+
+
+<h3>Updating Applications</h3>
+
+<ul>
+<li><p>vmc update</p>
+
+<blockquote><p>Note: This may cause an existing application to drop user requests if the application is available to others.</p></blockquote></li>
+</ul>
+
+
+<p>To update an application without downtime, we add the application as a new one associated with the existing URL, <em>disassociate the old version</em> from the URL, then delete the old one:</p>
+
+<ol>
+<li><p>vmc push appNEW</p>
+
+<blockquote><p>(At this point bind any shared services, like DB, Cache, etc.)</p></blockquote></li>
+<li><p>Test appNEW.cloufoundry.com</p></li>
+<li><p>vmc map appNEW app.cloudfoundry.com</p>
+
+<blockquote><p>Associate new application with existing URL.</p></blockquote></li>
+<li><p>Test app.cloudfoundry.com, including existing functionality</p></li>
+<li><p>vmc unmap appOLD app.cloudfoundry.com</p>
+
+<blockquote><p>Does not drop traffic; stops all new traffic to old application</p></blockquote></li>
+<li><p>Test app.cloudfoundry.com</p></li>
+<li><p>vmc delete appOLD</p></li>
+</ol>
+
+
+<h3>Monitoring and Management</h3>
+
+<ul>
+<li><p>vmc info</p>
+
+<blockquote><p>Displays information about your cloud foundry account, client, and total resources consumed</p></blockquote></li>
+<li><p>vmc list</p>
+
+<blockquote><p>Displays your applications on the cloud and their status (running/stopped/resources)</p></blockquote></li>
+<li><p>vmc logs appname</p>
+
+<blockquote><p>Displays standard output logs for the application</p></blockquote></li>
+<li><p>vmc crashlogs appname</p>
+
+<blockquote><p>Displays any fatal errors that occurred for an application. If none, displays standard output.</p></blockquote></li>
+<li><p>vmc stats appname</p>
+
+<blockquote><p>Displays resource consumption for application</p></blockquote>
+
+<p><img src="/assets/images/screenshots/vmc_stats.jpg" title="vmc stats" alt="vmc stats" /></p></li>
+<li><p>vmc instances n</p>
+
+<blockquote><p>Adds or removes instances of an application in your cloud</p></blockquote></li>
+</ul>
+
+
+<h3>Cloud Foundry Services</h3>
+
+<ul>
+<li><p>vmc services</p>
+
+<blockquote><p>Lists services available and provisioned for your cloud</p></blockquote></li>
+<li><p>vmc create-service servicename</p>
+
+<blockquote><p>Creates an instance of the service</p></blockquote></li>
+<li><p>vmc bind-service servicename appname</p>
+
+<blockquote><p>Binds a service to a cloud application</p></blockquote></li>
+<li><p>vmc unbind-service servicename appname</p>
+
+<blockquote><p>Unbinds service from named application</p></blockquote></li>
+<li><p>vmc delete-service servicename</p>
+
+<blockquote><p>Removes a provisioned service from your cloud</p></blockquote></li>
+<li><p>vmc push</p>
+
+<ul>
+<li><p>Select Yes for prompt &#8220;Would you like to bind any service to &#8216;appname&#8217;&#8221;</p></li>
+<li><p>Specify whether you want to bind to an existing service</p></li>
+<li><p>Select the number of the existing provisioned service you will bind</p></li>
+</ul>
+</li>
+<li><p>vmc update</p>
+
+<ul>
+<li><p>Stop your running application before you update: vmc stop appname</p></li>
+<li><p>vmc update</p></li>
+<li><p>vmc start appname</p></li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Karen Zeller</span></span>
+
+      
+
+
+
+
+<time datetime="2011-08-26 10:31:00 -0700" pubdate  updated >Aug 26<span>th</span>, 2011</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yoursite.com/blog/2011/08/26/vmc-cheatsheet/" data-via="" data-counturl="http://yoursite.com/blog/2011/08/26/vmc-cheatsheet/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
+</article>
+
+</div>
+
+<aside role=sidebar>
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/using-cloud-foundry-services/">Using Cloud Foundry Services</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/rails-and-sinatra-for-cloud-foundry/">Rails for Cloud Foundry</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/vmc-cheatsheet/">vmc: Cheatsheet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/micro-cloud-readme/">Micro Cloud README</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/micro-cloud-foundry-getting-started/">Micro Cloud Foundry Getting Started</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer><p>
+  Copyright &copy; 2011 -  <span class="credit"><a href="http://cloudfoundry.com/">Cloud Foundry</a></span> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+</body>
+</html>
