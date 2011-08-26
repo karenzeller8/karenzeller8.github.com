@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cloud Foundry Documentation: Cloud Foundry README</title>
+  <meta name="author" content="Karen Zeller">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://yoursite.com/blog/2011/08/26/cloud-foundry-readme/"/>
+  <link href="/favicon.png" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Cloud Foundry Documentation" type="application/atom+xml"/>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body  >
+  <header><hgroup>
+  <h1><a href="/">Cloud Foundry Documentation</a></h1>
+  
+    <h2>Deploy and Scale Your Application in Seconds</h2>
+  
+</hgroup>
+
+</header>
+  <nav role=navigation><ul role=subscription data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+<form action="http://google.com/search" method="get">
+  <fieldset role="site-search">
+    <input type="hidden" name="q" value="site:yoursite.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+<ul role=main-navigation>
+	<li><a href="/blog/archives">Documentation</a></li>
+  <li><a href="http://support.cloudfoundry.com/home">Support</a></li>
+
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry">
+  
+  <header>
+    
+      <h1 class="entry-title">Cloud Foundry README</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-08-26 10:20:00 -0700" pubdate  updated >Aug 26<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><h1>Cloud Foundry Platform as a Service (PAAS)</h1>
+
+<p>Cloud Foundry is the industry&#8217;s first open platform provided as a service started by VMware. It can support multiple frameworks, cloud providers, and application services on a scalable platform.</p>
+
+<p>There are three main components to Cloud Foundry:</p>
+
+<ul>
+<li><a href="[http://cloudfoundry.com/">CloudFoundry.com</a>:  a complete, hosted platform as a service plus tools helpful for managing a cloud application</li>
+<li><a href="http://cloudfoundry.org/">CloudFoundry.org </a>: an open source project where developers and community members can collaborate and contribute to the project</li>
+<li> <a href="[http://cloudfoundry.com/">Cloud Foundry Micro Cloud</a>:  a complete instance of the Cloud Foundry platform and tools designed for developers&#8217; desktops used in conjunction with VMware Fusion or VMware Player</li>
+</ul>
+
+
+<p>For technical support, forums and guides, visit the <a href="http://support.cloudfoundry.com/home">Cloud Foundry Community</a></p>
+
+<h2>Cloud Foundry PaaS</h2>
+
+<h3>Scope</h3>
+
+<p>Cloud Foundry&#8217;s Platform as a Service (Paas) includes:</p>
+
+<ul>
+<li>Self-service application execution environment</li>
+<li>Automation engine for deploying applications and managing them throughout their lifecycle</li>
+<li>vmc, a scriptable command line interface</li>
+<li>Plug-ins for Spring Source&#8217;s IDE (STS) and Eclipse for development and deployment</li>
+<li>Open application services interfaces</li>
+<li>Open cloud provider interfaces</li>
+<li>Open architecture</li>
+</ul>
+
+
+<h3>Supported Languages</h3>
+
+<p>As of this writing, Cloud Foundry&#8217;s cloud supports the following frameworks and languages:</p>
+
+<ul>
+<li><a href="http://www.springsource.com/developer/spring">Spring for Java</a></li>
+<li><a href="http://rubyonrails.org/">Ruby on Rails</a></li>
+<li><a href="http://www.sinatrarb.com/">Sinatra</a></li>
+<li><a href="http://nodejs.org/">Node.js</a></li>
+<li>JVM (Java Virtual Machine) Frameworks, including <a href="http://grails.org/">Grails</a></li>
+</ul>
+
+
+<h3>Application Services</h3>
+
+<p>The following services are supported on Cloud Foundry&#8217;s cloud:</p>
+
+<ul>
+<li><a href="http://www.mysql.com/">MySQL</a></li>
+<li><a href="http://www.mongodb.org/">MongoDB</a></li>
+<li><a href="http://redis.io/">Redis</a></li>
+<li><a href="http://www.rabbitmq.com/">RabbitMQ</a></li>
+</ul>
+
+
+<p>More service are coming in the near future. For the most complete and up to date list, visit <a href="http://cloudfoundry.com/">cloudfoundry.com</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Karen Zeller</span></span>
+
+      
+
+
+
+
+<time datetime="2011-08-26 10:20:00 -0700" pubdate  updated >Aug 26<span>th</span>, 2011</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yoursite.com/blog/2011/08/26/cloud-foundry-readme/" data-via="" data-counturl="http://yoursite.com/blog/2011/08/26/cloud-foundry-readme/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
+</article>
+
+</div>
+
+<aside role=sidebar>
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/using-cloud-foundry-services/">Using Cloud Foundry Services</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/rails-and-sinatra-for-cloud-foundry/">Rails for Cloud Foundry</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/vmc-cheatsheet/">vmc: Cheatsheet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/micro-cloud-readme/">Micro Cloud README</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/micro-cloud-foundry-getting-started/">Micro Cloud Foundry Getting Started</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer><p>
+  Copyright &copy; 2011 -  <span class="credit"><a href="http://cloudfoundry.com/">Cloud Foundry</a></span> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+</body>
+</html>

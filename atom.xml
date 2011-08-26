@@ -1,0 +1,2304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>Cloud Foundry Documentation</title>
+  <link href="http://yoursite.com/atom.xml" rel="self"/>
+  <link href="http://yoursite.com/"/>
+  <updated>2011-08-26T10:44:59-07:00</updated>
+  <id>http://yoursite.com/</id>
+  <author>
+    <name>Karen Zeller</name>
+    
+  </author>
+
+  
+  <entry>
+    <title>Using Cloud Foundry Services</title>
+    <link href="http://yoursite.com/blog/2011/08/26/using-cloud-foundry-services/"/>
+    <updated>2011-08-26T10:36:00-07:00</updated>
+    <id>http://yoursite.com/blog/2011/08/26/using-cloud-foundry-services</id>
+    <content type="html">&lt;p&gt;The following services are available to use in your application in Cloud Foundry's cloud:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.mysql.com/&quot;&gt;MySQL&lt;/a&gt;, the open source relational database&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.mongodb.org/&quot;&gt;MongoDB&lt;/a&gt;, the scalable, open, document-based database&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://redis.io/&quot;&gt;Redis&lt;/a&gt;, the open key-value data structure server&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.rabbitmq.com/&quot;&gt;RabbitMQ&lt;/a&gt;, for messaging&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;After you develop your application to integrate any one of these services locally, you can use standard Cloud Foundry client commands (vmc, SprintSource Tool Suite, or the Eclipse plugin) to add, bind, unbind, and delete these service in the cloud.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note: Make sure you have the latest version of vmc if you are using it: vmc -v, and if needed gem update vmc&lt;/em&gt;&lt;/p&gt;
+
+&lt;h1&gt;MySQL&lt;/h1&gt;
+
+&lt;p&gt;Cloud Foundry supports MySQL for your application, if you plan to use MySQL it as service, we recommend you also have MySQL running locally in your development environment.&lt;/p&gt;
+
+&lt;p&gt;Here is the process to follow whether using MySQL or another relational databases on your local/development environment:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;List the respective gem for that database as a dependency in your application's Gemfile, e.g. &quot;gem 'mysql2, '&amp;lt; 0.3'&quot;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Before you pushing the application to the cloud, run&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;bundle package&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;bundle install&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Push or update your application:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc push, or&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc stop appname, vmc update appname&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc create-service mysql --bind appname&lt;/p&gt;
+
+&lt;p&gt;This creates mysql as a service at Cloud Foundry and binds it to your application.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mysql_bind.jpg&quot; title=&quot;adding mysql service&quot; alt=&quot;adding mysql service&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you updated your application, vmc start appname&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h1&gt;MongoDB&lt;/h1&gt;
+
+&lt;p&gt;This scalable, open source, document-oriented database is provided as a service at Cloud foundry. This section describes how you can create Rails and NodeJS applications using the service.&lt;/p&gt;
+
+&lt;h2&gt;Ruby on Rails&lt;/h2&gt;
+
+&lt;p&gt;This tutorial is based on Rails 3.0 and Ruby 1.9. You can use Rails 2.3.5 or Ruby 1.8.7, we recommend you also use &lt;a href=&quot;http://gembundler.com/gemfile.html&quot;&gt;Bundler&lt;/a&gt; to manage your application Gem dependencies.&lt;/p&gt;
+
+&lt;h3&gt;Prerequisites&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://cloudfoundry.com/signup&quot;&gt;Cloud Foundry account&lt;/a&gt; and vmc&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Local installation of &lt;a href=&quot;http://www.mongodb.org/display/DOCS/Quickstart&quot;&gt;MongoDB&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://mongomapper.com/&quot;&gt;MongoMapper&lt;/a&gt;, (optional) an object-relational mapper (ORM).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://rubyonrails.org/&quot;&gt;Rails 3.0&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Creating an Application&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Create your new application:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails new my_app --skip-active-record
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add required gem dependencies to your application Gemfile:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;gem &quot;mongo_mapper&quot;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;gem &quot;thin&quot;&lt;/p&gt;
+
+&lt;p&gt;For Rails applications, Cloud Foundry is currently configured to use &lt;a href=&quot;http://code.macournoyer.com/thin/&quot;&gt;Thin&lt;/a&gt; as the one web server so we add it.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;gem &quot;bson_ext&quot;&lt;/p&gt;
+
+&lt;p&gt;Here we also add BSON for serialization of JSON-like documents; you will need it to interface with MongoDB's ruby driver.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_rails_gfile.jpg&quot; title=&quot;gemfile for mongodb&quot; alt=&quot;gemfile for mongodb&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run bundle install, so gem dependencies are loaded.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create your application. In the application root folder:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rails g scaffold messages message:string --orm mongo_mapper
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This creates an application via Rails scaffolding where the model uses MongoMapper rather than Active Record. The application contains a single table messages with a single column of type string.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;(Optional) Updating Routes. Here we update config/routes.rb so the application root points to messages by default:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;root :to =&gt; &quot;messages#index&quot;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;delete public/index.html from your application&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_routes.jpg&quot; title=&quot;updating routes&quot; alt=&quot;updating routes&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create a configuration file to communicate with MongoDB at Cloud Foundry:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; rails g mongo_mapper:config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt; This creates a basic config/mongo.yml file in our application that we will modify to have our credentials, host, and port for Cloud Foundry in &lt;a href=&quot;http://www.json.org/&quot;&gt;JSON&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt; &lt;img src=&quot;assets/images/screenshots/mongo_yml.jpg&quot; title=&quot;mongo yaml&quot; alt=&quot;mongo yaml&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Modify the production section of config/mongo.yml&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;production:   
+    host: &amp;lt;%= JSON.parse(ENV['VCAP_SERVICES'])['mongodb-1.8'].first['credentials']['hostname'] rescue 'localhost' %&amp;gt;
+    port: &amp;lt;%= JSON.parse( ENV['VCAP_SERVICES'] )['mongodb-1.8'].first['credentials']['port'] rescue 27017 %&amp;gt;
+    database:  &amp;lt;%= JSON.parse( ENV['VCAP_SERVICES'] )['mongodb-1.8'].first['credentials']['db'] rescue 'cloud_foundry_mongodb_tutorial' %&amp;gt;
+    username: &amp;lt;%= JSON.parse( ENV['VCAP_SERVICES'] )['mongodb-1.8'].first['credentials']['username'] rescue '' %&amp;gt;
+    password: &amp;lt;%= JSON.parse( ENV['VCAP_SERVICES'] )['mongodb-1.8'].first['credentials']['password'] rescue '' %&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Deploying an Application&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Push the application:&lt;/p&gt;
+
+&lt;p&gt;vmc push --runtime ruby19&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc will ask if you want to bind any services:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Select 2 (mongodb)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Provide a name or choose the default&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_ror_push.jpg&quot; title=&quot;pushing mongo ror app&quot; alt=&quot;pushing mongo ror app&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Open your browser to the url selected when you pushed the application to view it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_ror_app.jpg&quot; title=&quot;mongo ror app&quot; alt=&quot;mongo ror app&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;NodeJS&lt;/h2&gt;
+
+&lt;p&gt;Before you get started, you will need these tools:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://cloudfoundry.com/signup&quot;&gt;Cloud Foundry account&lt;/a&gt; and vmc&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Local installation of &lt;a href=&quot;http://www.mongodb.org/display/DOCS/Quickstart&quot;&gt;MongoDB&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://nodejs.org/&quot;&gt;NodeJS&lt;/a&gt; for your development machine&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Code for these examples can be found at &lt;a href=&quot;https://github.com/gatesvp/cloudfoundry_node_mongodb&quot;&gt;GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Setup&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Start mongod on your local environment. At the command prompt:&lt;/p&gt;
+
+&lt;p&gt;mongod&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Confirm node.js is correctly installed:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Run node and the interactive javascript console will start&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Check that Node Package Manager (NPM) is installed: at the command line, enter NPM -v&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_node_nvm.jpg&quot; title=&quot;mongo node nvm&quot; alt=&quot;mongo node nvm&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc target api.cloudfoundry.com&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc login&lt;/p&gt;
+
+&lt;p&gt;Enter your username and password&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Create Application Files&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Create an application directory: mkdir appname&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Change to that directory: cd appname&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create a file app.js&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Add a Simple Web Server&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In app.js, add the code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var port = (process.env.VMC_APP_PORT || 3000);
+var host = (process.env.VCAP_APP_HOST || 'localhost');
+var http = require('http');
+
+http.createServer(function (req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Hello World\n');
+}).listen(port, host);      
+console.log('Server running at localhost:3000');
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This creates a NodeJS web server using port 3000 on localhost that will respond to any HTTP request with 'Hello World.'&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;node app.js&lt;/p&gt;
+
+&lt;p&gt;Your NodeJS web server starts.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_node_ws.jpg&quot; title=&quot;mongo node server&quot; alt=&quot;mongo node server&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In another terminal window send a request: curl localhost:3000&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_node_curl.jpg&quot; title=&quot;mongo node curl&quot; alt=&quot;mongo node curl&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Stop the node: Control-C&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Push the application to Cloud Foundry: vmc push&lt;/p&gt;
+
+&lt;p&gt;Cloud Foundry detects node.js and asks for configuration options, including a name and the services we want.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Select 'y' to bind a service&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select '1' for mongodb&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select default service name&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Cloud Foundry stages and starts your application.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;![mongo node push](assets/images/screenshots/mongo_node_push.jpg &quot;mongo node cloud curl&quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;curl appname.cloudfoundry.com&lt;/p&gt;
+
+&lt;p&gt;Your application in the cloud will return 'Hello World.'&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_node_cfcurl.jpg&quot; title=&quot;mongo node cloud curl&quot; alt=&quot;mongo node cloud curl&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Add MongoDB Configuration&lt;/h3&gt;
+
+&lt;p&gt;Here we update the application so that it will use the Cloud Foundry service it is in on the cloud, or it will use your local mongodb instance.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;We add this to app.js:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (process.env.VCAP_SERVICES){
+    var env = JSON.parse(process.env.VCAP_SERVICES);
+    var mongo = env['mongodb-1.8'][0]['credentials'];
+}       
+else {
+    var mongo = {
+        &quot;hostname&quot;:&quot;localhost&quot;,
+        &quot;port&quot;:27017,
+        &quot;username&quot;:&quot;&quot;,
+        &quot;password&quot;:&quot;&quot;, 
+        &quot;name&quot;:&quot;&quot;,
+        &quot;db&quot;:&quot;&quot;
+    }
+}
+
+var generate_mongo_url = function(obj){
+    obj.hostname = (obj.hostname || 'localhost');
+    obj.port = (obj.port || 27017);
+    obj.db = (obj.db || 'test');
+    if(obj.username &amp;amp;&amp;amp; obj.password){
+        return &quot;mongodb://&quot; + obj.username + &quot;:&quot; + obj.password + &quot;@&quot; + obj.hostname + &quot;:&quot; + obj.port + &quot;/&quot; + obj.db;
+    }
+    else{
+        return &quot;mongodb://&quot; + obj.hostname + &quot;:&quot; + obj.port + &quot;/&quot; + obj.db;
+    }
+}
+
+var mongourl = generate_mongo_url(mongo);
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;blockquote&gt;&lt;p&gt;The if conditional will provide two different sets of information, depending on if the application is on the cloud or running locally. The generate&amp;#95;mongo&amp;#95;url creates appropriate connection information for MongoDB and it it then assigned to mongourl.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Test app.js locally:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt; node app.js&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt; in another terminal, curl localhost:3000&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Update the cloud application: vmc update&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test it: curl appname.cloudfoundry.com&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Using MongoDB Drivers&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Install MongoDB native drivers locally: npm install mongodb&lt;/p&gt;
+
+&lt;p&gt; This create a new local directory for the driver in the application root, node_modules.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;To use the drivers on at Cloud Foundry, we provide a different path. At the top of the app.js:&lt;/p&gt;
+
+&lt;p&gt;require.paths.unshift('./node_modules');&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Using MongoDB&lt;/h3&gt;
+
+&lt;p&gt;Now we built functionality in our application that uses MongoDB. In this example we record a visit/request to our server and then print the last ten visits:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;We create a new function, record_visit that will store the server request to MongoDB:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var record_visit = function(req, res){
+    /* Connect to the DB and auth */
+    require('mongodb').connect(mongourl, function(err, conn){
+        conn.collection('ips', function(err, coll){
+            /* Simple object to insert: ip address and date */
+            object_to_insert = { 'ip': req.connection.remoteAddress, 'ts': new Date() };
+/* Insert the object then print in response */
+/* Note the _id has been created */     
+    coll.insert( object_to_insert, {safe:true}, function(err){
+if(err) { console.log(err.stack); }
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.write(JSON.stringify(object_to_insert));
+        res.end('\n');
+        });
+    });
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}&lt;/p&gt;
+
+&lt;p&gt;Here we use the .connect method to connect to MongoDB using either the local or Cloud Foundry mongourl. Then we use the .collection('ips' ....) method to add the request information to the data that will be committed.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Update the http.createServer method. Here we are updating this function so it calls the record_visit function when the server request is made:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http.createServer(function (req, res) {
+    record_visit(req, res);
+}).listen(port, host);
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test app.js locally and on the cloud:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;node app.js then curl localhost:3000&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc update, then curl appname.cloudfoundry.com&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mong_node_reccf.jpg&quot; title=&quot;mongo node record&quot; alt=&quot;mongo node record&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;After we test, we create a function that will actually output information from MongoDB. In this case we add a function print_visits that prints that last 10 visits/requests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var print_visits = function(req, res){
+    /* Connect to the DB and auth */
+    require('mongodb').connect(mongourl, function(err, conn){
+        conn.collection('ips', function(err, coll){
+            coll.find({}, {limit:10, sort:[['_id','desc']]}, function(err, cursor){
+                cursor.toArray(function(err, items){
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+                    for(i=0; i&amp;lt;items.length;i++){
+                        res.write(JSON.stringify(items[i]) + &quot;\n&quot;);
+                    }
+                    res.end();
+                });
+            });
+        });
+    });
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Then we update the createServer method again to call the new function, print_visits:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http.createServer(function (req, res) {
+    params = require('url').parse(req.url);
+    if(params.pathname === '/history') {
+        print_visits(req, res);
+    }
+    else{
+        record_visit(req, res);
+    }
+}).listen(port, host);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In this case, requests to the web server will either add the current visit to MongoDB (the default) or if this url request has '/history' it will output the last 10 visits.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test app.js locally:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_node_curlrec.jpg&quot; title=&quot;mongo node print&quot; alt=&quot;mongo node print&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Stop the application, update it: vmc update&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_node_update.jpg&quot; title=&quot;mongo node update&quot; alt=&quot;mongo node update&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test the cloud version:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;curl appname.cloudfoundry.com, and&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;curl appname.cloudfoundry.com/history&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mongo_node_histcf.jpg&quot; title=&quot;mongo node history&quot; alt=&quot;mongo node history&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;All the server requests have been recorded on Cloud Foundry's MongoDB service.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h1&gt;Redis&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://redis.io/&quot;&gt;Redis&lt;/a&gt; is an open source key-value store, also known as a NoSQL database. You set, get, update and delete information using a key.&lt;/p&gt;
+
+&lt;p&gt;For any application written in Ruby, such as applications in Rails or Sinatra, follow this process:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Add the gem to your application's Gemfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gem 'redis'
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Load the library into your application's runtime. In Rails, for instance you would use the require statement in application.rb. In Sinatra, you would add this to your .rb configuration file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require 'redis'
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Configure your environment so it can locate the Redis service on the cloud:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;configure do
+    services = JSON.parse(ENV['VCAP_SERVICES'])
+    redis_key = services.keys.select { |svc| svc =~ /redis/i }.first
+    redis = services[redis_key].first['credentials']
+    redis_conf = {:host =&amp;gt; redis['hostname'], :port =&amp;gt; redis['port'], :password =&amp;gt; redis['password']}
+    @@redis = Redis.new redis_conf
+end 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We provide credentials to connect to the Redis service as environment variables under the key VCAP_SERVICES. The values are stored as JSON so we use the JSON parser in the first line to extract it.&lt;/p&gt;
+
+&lt;p&gt;The last line creates a class variable @@redis which is available for all its subclasses in your application and will be used at runtime to add key/values to Redis.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In your application use the available &lt;a href=&quot;http://redis.io/commands&quot;&gt;Redis commands&lt;/a&gt; to edit and add key/values to the data store.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run bundle package.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Update or add your application to the cloud:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;To update&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc stop appname&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc update&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;To add: vmc push&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Bind to Cloud Foundry's Redis service:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vmc create-service redis --bind appname
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;For updated applications, start again:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;vmc start appname
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h1&gt;RabbitMQ&lt;/h1&gt;
+
+&lt;p&gt;Cloud Foundry supports &lt;a href=&quot;http://www.rabbitmq.com/&quot;&gt;RabbitMQ&lt;/a&gt;, the open-source message broker as a service that developers can add to their applications.&lt;/p&gt;
+
+&lt;p&gt;As with all other Cloud Foundry services, you can use vmc or SpringSource STS to provision, bind and remove &lt;a href=&quot;http://www.rabbitmq.com/&quot;&gt;RabbitMQ&lt;/a&gt; services.&lt;/p&gt;
+
+&lt;p&gt;The RabbitMQ service at Cloud Foundry is currently based on rabbitmq-server-2.4.1.&lt;/p&gt;
+
+&lt;p&gt;For more information about RabbitMQ, see these resources:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.rabbitmq.com/download.html&quot;&gt;Download&lt;/a&gt;, &lt;a href=&quot;http://www.rabbitmq.com/install.html&quot;&gt;install&lt;/a&gt; and &lt;a href=&quot;http://www.rabbitmq.com/configure.html&quot;&gt;configure&lt;/a&gt; RabbitMQ&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.rabbitmq.com/getstarted.html&quot;&gt;RabbitMQ Tutorials&lt;/a&gt;, cover the basics of creating messaging in your applications.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Language and Framework Support&lt;/h2&gt;
+
+&lt;p&gt;All languages and frameworks supported by Cloud Foundry that have an Advanced Message Queue Protocol (AMQP) client library are also supported by the RabbitMQ service.&lt;/p&gt;
+
+&lt;p&gt;Applications in the following language, framework and client library combinations have been deployed on Cloud Foundry:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Java Spring applications with &lt;a href=&quot;http://www.springsource.org/spring-amqp&quot;&gt;Spring AMQP&lt;/a&gt; (version 1.0.0.RC2)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Ruby on Rails and Sinatra applications with the &lt;a href=&quot;https://github.com/ruby-amqp/bunny&quot;&gt;bunny gem&lt;/a&gt; (version 0.7.4)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;NodeJS applications with the &lt;a href=&quot;https://github.com/postwait/node-amqp&quot;&gt;node-amqp&lt;/a&gt; (version 0.1.0)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Protocol Support&lt;/h2&gt;
+
+&lt;p&gt;RabbitMQ service supports the core protocols of RabbitMQ: AMQP versions 0-8 and 0-9-1. Other protocols will be supported by RabbitMQ plugins.&lt;/p&gt;
+
+&lt;h2&gt;Provisioning and Binding RabbitMQ&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;vmc target api.cloudfoundry.com&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc login&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Provision the service: vmc create-service&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select 1, for rabbitmq&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Cloud Foundry will provision the service for your cloud and name the service.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Bind the service to your application: vmc bind-service rabbitmq-name appname&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Check the application:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc list&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc apps&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Returns a list of applications on your cloud and any associated services.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Rails and RabbitMQ&lt;/h2&gt;
+
+&lt;p&gt;The RabbitMQ service is accessed through the &lt;a href=&quot;http://www.amqp.org/&quot;&gt;AMQP protocol&lt;/a&gt; (versions 0.8 and 0.9.1) and your application will need access to a AMQP client library in order to use the service.&lt;/p&gt;
+
+&lt;p&gt;A popular AMQP client libraries for Rails is &lt;a href=&quot;https://github.com/ruby-amqp/bunny&quot;&gt;bunny&lt;/a&gt;; we will use it demonstrate the process you would follow:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note: As mentioned before, if you are using Rails 2.3.5 we recommend you also use &lt;a href=&quot;http://gembundler.com/&quot;&gt;Bundler&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In Gemfile, add bunny and json (the latter is used to parse service connection data):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gem 'bunny'
+gem 'json'
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;bundle install&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Bundler fetches and installs the latest version of bunny and json for your application.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Require the gems in your controller:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require 'bunny'
+require 'json'
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Update the controller class to get the connection string for the service and make the connection:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Extracts the connection string for the rabbitmq service from the
+# service information provided by Cloud Foundry in an environment
+# variable.
+    def self.amqp_url
+        services = JSON.parse(ENV['VCAP_SERVICES'], :symbolize_names =&amp;gt; true)
+        url = services.values.map do |srvs|
+        srvs.map do |srv|
+            if srv[:label] =~ /^rabbitmq-/
+                srv[:credentials][:url]
+                else
+                []
+            end
+        end
+    end.flatten!.first
+end
+
+# Opens a client connection to the RabbitMQ service, if one is not
+# already open.  This is a class method because a new instance of
+# the controller class will be created upon each request.  But AMQP
+# connections can be long-lived, so we would like to re-use the
+# connection across many requests.
+def self.client
+    unless @client
+        c = Bunny.new(amqp_url)
+        c.start
+        @client = c
+    end
+    @client
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Set up message queues in the controller:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Return the &quot;nameless exchange&quot;, pre-defined by AMQP as a means to
+# send messages to specific queues.  Again, we use a class method to
+# share this across requests.
+def self.nameless_exchange
+    @nameless_exchange ||= client.exchange('')
+end
+
+# Return a queue named &quot;messages&quot;.  This will create the queue on
+# the server, if it did not already exist.  Again, we use a class
+# method to share this across requests.
+def self.messages_queue
+    @messages_queue ||= client.queue(&quot;messages&quot;)
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add controller methods to read and write messages:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# The action for our publish form.
+def publish
+    # Send the message from the form's input box to the &quot;messages&quot;
+    # queue, via the nameless exchange.  The name of the queue to
+    # publish to is specified in the routing key.
+    HomeController.nameless_exchange.publish params[:message],
+                                   :key =&amp;gt; &quot;messages&quot;
+    # Notify the user that we published.
+    flash[:published] = true
+    redirect_to home_index_path
+end
+
+def get
+    # Synchronously get a message from the queue
+    msg = HomeController.messages_queue.pop
+    # Show the user what we got
+    flash[:got] = msg[:payload]
+    redirect_to home_index_path
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;NodeJS and RabbitMQ&lt;/h2&gt;
+
+&lt;p&gt;For NodeJS applications, the approach is similar to other frameworks. RabbitMQ service is accessed through the &lt;a href=&quot;http://www.amqp.org/&quot;&gt;AMQP protocol&lt;/a&gt; (versions 0.8 and 0.9.1) and your application will need access to a AMQP client library in order to use the service.&lt;/p&gt;
+
+&lt;p&gt;In this case we also recommend you use:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;npm (node package manager) to handle the dependent library&lt;/li&gt;
+&lt;li&gt;sanitizer to handle HTML escape characters&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Here is the process to generally follow; there is room to change this as needed for your application-specific logic:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Add the library dependencies to package.json:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    &quot;name&quot;:&quot;node-srs-demo&quot;,
+    &quot;dependencies&quot;:{
+        &quot;amqp&quot;:&quot;&amp;gt;= 0.1.0&quot;,
+        &quot;sanitizer&quot;: &quot;*&quot;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In your application file, e.g. app.js, add the code connect to the service:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require.paths.unshift('./node_modules');
+
+var http = require('http');
+var amqp = require('amqp');
+var URL = require('url');
+var htmlEscape = require('sanitizer/sanitizer').escape;
+
+function rabbitUrl() {
+    if (process.env.VCAP_SERVICES) {
+        conf = JSON.parse(process.env.VCAP_SERVICES);
+        eturn conf['rabbitmq-2.4'][0].credentials.url;
+    }
+    else {
+        return “amqp://localhost&quot;;
+    }
+}
+
+var port = process.env.VCAP_APP_PORT || 3000;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first line tells the application where the node_modules libraries are on Cloud Foundry; they just live in a different path than they do on your development environment. Then we load up our required libraries and assign them to variables we use later.&lt;/p&gt;
+
+&lt;p&gt;The rabbitURL function parses our credentials for Cloud Foundry as well as the URL for the provisioned RabbitMQ service. Then it connect to the service.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Set up message handling and messaging queues in your application:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var messages = [];
+function setup() {
+  var exchange = conn.exchange('cf-demo', {'type': ‘fanout', durable: false}, function() {
+    var queue = conn.queue(&quot;, {durable: false, exclusive: true},
+    function() {
+      queue.subscribe(function(msg) {
+        messages.push(htmlEscape(msg.body));
+        if (messages.length &amp;gt; 10) {
+          messages.shift();
+        }
+      });
+      queue.bind(exchange.name, &quot;);
+    });
+    queue.on('queueBindOk', function() { httpServer(exchange); });
+  });
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add an HTTP listener to respond to requests and publish messages from RabbitMQ:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function httpServer(exchange) {
+  var serv = http.createServer(function(req, res) {
+    var url = URL.parse(req.url);
+    if (req.method == 'GET' &amp;amp;&amp;amp; url.pathname == '/env') {
+      printEnv(res);
+    }
+    else if (req.method == 'GET' &amp;amp;&amp;amp; url.pathname == '/') {
+      res.statusCode = 200;
+      openHtml(res);
+      writeForm(res);
+      writeMessages(res);
+      closeHtml(res);
+    }
+    else if (req.method == 'POST' &amp;amp;&amp;amp; url.pathname == '/') {
+      chunks = '';
+      req.on('data', function(chunk) { chunks += chunk; });
+      req.on('end', function() {
+        msg = unescapeFormData(chunks.split('=')[1]);
+        exchange.publish(&quot;, {body: msg});
+        res.statusCode = 303;
+        res.setHeader('Location', '/');
+        res.end();
+      });
+    }
+    else {
+      res.statusCode = 404;
+      res.end(&quot;This is not the page you were looking for.&quot;);
+    }
+  });
+  serv.listen(port);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add any application helpers:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var conn = amqp.createConnection({url: rabbitUrl()});
+conn.on('ready', setup);
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Spring and RabbitMQ&lt;/h2&gt;
+
+&lt;p&gt;The RabbitMQ service is accessed through the &lt;a href=&quot;http://www.amqp.org/&quot;&gt;AMQP protocol&lt;/a&gt; (versions 0.8 and 0.9.1) and your application will need access to a AMQP client library in order to use the service. Fortunately the Spring AMQP project enables AMQP applications to be built using Spring constructs.&lt;/p&gt;
+
+&lt;p&gt;To use the RabbitMQ service we include the cloudfoundry-runtime jar in our Spring application; this enables access to Cloud Foundry services, including RabbitMQ.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note: For more information about Spring AMQP, visit the reference &lt;a href=&quot;http://static.springsource.org/spring-amqp/docs/1.0.x/reference/html/&quot;&gt;documentation&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Add the corresponding dependencies to the application pom.xml file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;repositories&amp;gt;
+    &amp;lt;repository&amp;gt;
+        &amp;lt;id&amp;gt;spring-milestone&amp;lt;/id&amp;gt;
+        &amp;lt;name&amp;gt;Spring Maven MILESTONE Repository&amp;lt;/name&amp;gt;
+        &amp;lt;url&amp;gt;http://maven.springframework.org/milestone&amp;lt;/url&amp;gt;
+    &amp;lt;/repository&amp;gt;
+&amp;lt;/repositories&amp;gt;
+
+&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;cglib&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;cglib-nodep&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;2.2&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+
+&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.springframework.amqp&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;spring-rabbit&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;1.0.0.RC2&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+
+&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.cloudfoundry&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;cloudfoundry-runtime&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;0.7.1&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Extend the Spring Application Context XML.&lt;/p&gt;
+
+&lt;p&gt;These changes do the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Uses cloudfoundry-runtime to connect to the RabbitMQ service.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Configures RabbitTemplate and RabbitAdminthat as the main entry points to Spring AMQP.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Declares a queue called messages within the RabbitMQ broker.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;
+xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+xmlns:rabbit=&quot;http://www.springframework.org/schema/rabbit&quot;
+xmlns:cloud=&quot;http://schema.cloudfoundry.org/spring&quot;
+xsi:schemaLocation=&quot;http://www.springframework.org/schema/mvc   http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+                   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                   http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd
+                   http://schema.cloudfoundry.org/spring http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.7.xsd&quot;&amp;gt;
+
+
+&amp;lt;!-- Obtain a connection to the RabbitMQ via cloudfoundry-runtime: --&amp;gt;
+&amp;lt;cloud:rabbit-connection-factory id=&quot;connectionFactory&quot;/&amp;gt;
+
+&amp;lt;!-- Set up the AmqpTemplate/RabbitTemplate: --&amp;gt;
+&amp;lt;rabbit:template connection-factory=&quot;connectionFactory&quot;/&amp;gt;
+
+&amp;lt;!-- Request that queues, exchanges and bindings be automatically declared on the broker: --&amp;gt;
+&amp;lt;rabbit:admin connection-factory=&quot;connectionFactory&quot;/&amp;gt;
+
+&amp;lt;!-- Declare the &quot;messages&quot; queue: --&amp;gt;
+&amp;lt;rabbit:queue name=&quot;messages&quot; durable=&quot;true&quot;/&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Update your application controller/logic.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Include the messaging libraries:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.core.AmqpTemplate;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt; Read and write messages:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; @Controller
+public class HomeController {
+    @Autowired AmqpTemplate amqpTemplate;
+
+    @RequestMapping(value = &quot;/&quot;)
+    public String home(Model model) {
+        model.addAttribute(new Message());
+        return &quot;WEB-INF/views/home.jsp&quot;;
+    }
+
+    @RequestMapping(value = &quot;/publish&quot;, method=RequestMethod.POST)
+    public String publish(Model model, Message message) {
+        // Send a message to the &quot;messages&quot; queue
+        amqpTemplate.convertAndSend(&quot;messages&quot;, message.getValue());
+        model.addAttribute(&quot;published&quot;, true);
+        return home(model);
+    }
+
+    @RequestMapping(value = &quot;/get&quot;, method=RequestMethod.POST)
+    public String get(Model model) {
+        // Receive a message from the &quot;messages&quot; queue
+        String message = (String)amqpTemplate.receiveAndConvert(&quot;messages&quot;);
+        if (message != null)
+            model.addAttribute(&quot;got&quot;, message);
+        else
+            model.addAttribute(&quot;got_queue_empty&quot;, true);
+
+        return home(model);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+  </entry>
+  
+  <entry>
+    <title>Rails for Cloud Foundry</title>
+    <link href="http://yoursite.com/blog/2011/08/26/rails-and-sinatra-for-cloud-foundry/"/>
+    <updated>2011-08-26T10:34:00-07:00</updated>
+    <id>http://yoursite.com/blog/2011/08/26/rails-and-sinatra-for-cloud-foundry</id>
+    <content type="html">&lt;p&gt;This is a practical guide for Ruby on Rails developers who are using Cloud Foundry. It assumes you already have vmc, SpringSource STS, or Eclipse installed, plus you have deployed a simple &quot;Hello World&quot;-style application on the cloud. It also assumes you are already proficient in developing Rails applications and are familiar with tool used to manage dependencies in Rails applications.&lt;/p&gt;
+
+&lt;p&gt;For more information, see:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://rubyonrails.org/&quot;&gt;Ruby on Rails&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://gembundler.com/gemfile.html&quot;&gt;Bundler&lt;/a&gt;, the gem dependency manager&lt;/li&gt;
+&lt;li&gt;Cloud Foundry Getting Started Guides for CLI (vms) or STS/Eclipse&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Ruby&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.ruby-lang.org/en/&quot;&gt;Ruby&lt;/a&gt; is the object-oriented, interpreted programming language that your Rails application is built in.&lt;/p&gt;
+
+&lt;h3&gt;Versions&lt;/h3&gt;
+
+&lt;p&gt;Note the following on Cloud Foundry and Ruby:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+   Ruby 1.8+, the default support (1.8.7 recommended or higher)
++   Ruby 1.9 also supported (1.9.2 patch level 174 recommended or higher). 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To deploy your application on the cloud running on Ruby 1.9: vmc push myapp --runtime ruby19&lt;/p&gt;
+
+&lt;h3&gt;Ruby on MacOSX&lt;/h3&gt;
+
+&lt;p&gt;MacOSX includes Ruby 1.8+ as part of the standard installation. On some versions of MacOSX, such as Lion, Ruby is provided as 1.8.7. patch level 249. This may cause an incompatibility with vmc. To solve this:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Install &lt;a href=&quot;https://rvm.beginrescueend.com/&quot;&gt;Ruby Version Manager&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/rvm_ruby_pl.jpg&quot; title=&quot;rvm mac osx patchlevel&quot; alt=&quot;rvm mac osx patchlevel&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Install &lt;a href=&quot;http://www.ruby-lang.org/en/&quot;&gt;Ruby 1.8.7 or 1.9.2&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run rvm use 1.8.7-p249&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Gems&lt;/h2&gt;
+
+&lt;p&gt;Gems are Ruby libraries you create or get from third parties that add functionality to your application. Gemfiles are used to specify which gems/libraries your application uses and therefore depends upon.&lt;/p&gt;
+
+&lt;p&gt;Some important notes about using Gems and Gemfiles with Cloud Foundry:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Gemfiles: your application must include a Gemfile that lists all required gems with version numbers. You can use Bundler to manage these dependencies before you add or update an application on the cloud:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In your application's root (Gemfile's location) run bundle package&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run bundle install&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pre-package your application's dependencies before you update or add it to the cloud&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Special Gemfile references are not currently supported&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;These Gemfile features are not yet supported:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Gem dependencies on git urls or branches&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;gem:path =&gt; 'this/path'&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;platform-conditional gems&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Library dependency. When you use a gem that also depends on other libraries, be certain to understand any potential errors that can occur while loading dependent library versions using $LOAD_PATH.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/jbarnette/isolate&quot;&gt;Isolate&lt;/a&gt; a library dependency manager is not yet fully supported by Cloud Foundry.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;RMagick an interface between Ruby and image processing libraries, is not currently supported. Instead us the &lt;a href=&quot;http://www.imagemagick.org/script/index.php&quot;&gt;native PHP Library&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Ruby on Rails&lt;/h2&gt;
+
+&lt;p&gt;Cloud Foundry official supports the following versions of Rails:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2.3.10&lt;/li&gt;
+&lt;li&gt;3.0.1&lt;/li&gt;
+&lt;li&gt;3.0.3&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;Note: The majority of other Rails 2.3+ versions will also work on Cloud Foundry, but we do suggest you modify your Rails 2.3+ application to also work with [Bundler].(http://gembundler.com/)&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3&gt;Rails 2.3&lt;/h3&gt;
+
+&lt;p&gt;Applications written in Rails 2.3 be pushed to Cloud Foundry, however this version is not automatically detected. To deploy your application, add standard elements of a Rails 3 application to your Rails 2.3 application then push it to the cloud:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Create a file application.rb in the config folder&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create a file config.ru in the root of your applications&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc push appname&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;em&gt;Note: for multiple application dependences (gems/libraries), or layered dependencies (where a gem you require requires others) we strongly recommend using &lt;a href=&quot;http://gembundler.com/gemfile.html&quot;&gt;Bundler&lt;/a&gt; to manage your gems&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3&gt;Rails 2.3.3&lt;/h3&gt;
+
+&lt;p&gt;Applications in 2.3.3 often use config.gem in the environment.rb file to specify dependent gems, or relied on a list of gems already installed on the system. Here are the two ways to run Rails 2.3.3 applications with vmc:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Edit config/boot.rb&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;create config/preinitializer.rb&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;This sets your Rails 2.3.3 application up for Bundler&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;List your gem dependencies in $RAILS_ROOT/Gemfile&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;An alternative method is to freeze your desired version of Rails:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Put gems your application is dependent upon in the vendor/rails folder of your application.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run rake rails:freeze:gems.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;This locks your application to the current gems in vendor/rails&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Rails 3&lt;/h3&gt;
+
+&lt;p&gt;This latest version of Rails can be automatically detected by Cloud Foundry based on configuration files. Rails 3 has new features which better enable you to manage gem dependencies on the cloud. Note the following about Gems in Rails 3 with Cloud Foundry:&lt;/p&gt;
+
+&lt;h4&gt;Gems and Gemfiles&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The root of your Rails 3 application contains Gemfile and Gemfile.lock, to specify your list of gem dependencies and to lock this list.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Bundler is included with Rails 3 and will automatically enable dependent gems listed in Gemfile. If Cloud Foundry detects a Gemfile.lock in your application:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;It checks the listed gems in Gemfile are packaged, and&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Sets the BUNDLE_PATH environment variable to point to the packaged gems.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Application State Undetermined. If you receive the error 'Starting Application: ............Error: Application [APP]'s state is undetermined, not enough information available':&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Check that your Gemfile is current and specifies each gem as a separate list item&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Keep your Gemfile as a simple, un-nested list of gems&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run bundle package and bundle install&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h4&gt;Scope/Limitations&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Cloud Foundry is able to locate gem dependencies which are also detectable using the RubyGems 'gem install' command.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Limitations: Errors may occur if your application:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Contains complex lists of gems,&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Uses build scripts for gem dependencies,&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Deploys with gems from several different repositories.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;Note: As a general rule, pre-package your application's dependencies using &lt;a href=&quot;http://gembundler.com/gemfile.html&quot;&gt;Bundler&lt;/a&gt; or another gem dependency manager to greatest extent possible&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2&gt;Bundler&lt;/h2&gt;
+
+&lt;p&gt;If you are creating a Rails 2.3 application, we recommend using &lt;a href=&quot;http://gembundler.com/gemfile.html&quot;&gt;Bundler&lt;/a&gt; to manage gems your application depends upon. Rails 3 includes Bundler, which will help simplify gem management, and will reduce any errors or failure when you deploy your application to the cloud.&lt;/p&gt;
+
+&lt;h3&gt;Basics&lt;/h3&gt;
+
+&lt;p&gt;For Ruby frameworks that don't already include Bundler:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;gem install bundler&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In your application's Gemfile, add the gem dependency:&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;gem &quot;rspec&quot;&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;bundle install, to install new gems&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc push or update&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Tips on Bundler for Cloud Foundry&lt;/h3&gt;
+
+&lt;p&gt;The following are tips on using Bundler for the cloud:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Bundle Settings&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Reduce complicated and confusing bundle settings, such as nested lists.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Use the most commonly used version of a gem. Gemfiles that rely on an old version of the gem (e.g. Rails) or the very new version (e.g. Rack) may not be satisfied.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Be specific about the gem version that you are using.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Bundler Groups&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Avoid using different multiple techniques for specifying which groups to load for your different Rails environments (development, test, and production).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;When you add groups to your load path, be as specific as possible when you use Bundler.setup to reference a group, or gem within a group.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/bundler_setup.jpg&quot; title=&quot;bundler setup&quot; alt=&quot;bundler setup&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Published Gems and Local Caching. Cloud Foundry does not yet support package gems that need to be fetched/updated from a git repository, therefore:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Avoid using 'bundle install --local', which enables faster loading of gems from a local cache, but relies on fetching the most recent from a git repository&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Avoid using the ':path =&gt; /this/path' in your Gemfile to manually specify a local gem since this will also rely on a fetch from a git repository&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Special Gemfile references. These types of reference are not yet supported by Cloud Foundry:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;References to git repositories by url&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;References to git repositories by name&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;To be most successful with gem dependencies in your application, use published gems.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Web Application Servers&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Cloud Foundry's cloud and vmc currently supports one web application server for Rails and Sinatra applications, &lt;a href=&quot;http://code.macournoyer.com/thin/&quot;&gt;Thin&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;By default Rails comes with the default web server, WEBrick.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;To successfully push and start your application to Cloud Foundry's cloud, add Thin as your web server by adding the statement &quot;gem 'thin'&quot; to your Gemfile:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/gemfile_thin.jpg&quot; title=&quot;gemfile thin&quot; alt=&quot;gemfile thin&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;Note: Even if your application already requires Thin and you are using Bundler, specifically add it to your gemfile&lt;/em&gt;&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>vmc: Cheatsheet</title>
+    <link href="http://yoursite.com/blog/2011/08/26/vmc-cheatsheet/"/>
+    <updated>2011-08-26T10:31:00-07:00</updated>
+    <id>http://yoursite.com/blog/2011/08/26/vmc-cheatsheet</id>
+    <content type="html">&lt;h2&gt;A Practical vmc Guide at a Glance&lt;/h2&gt;
+
+&lt;p&gt;Notes extracted from &lt;a href=&quot;http://support.cloudfoundry.com/&quot;&gt;Cloud Foundry Support&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For more information: vmc -h, or vmc help.&lt;/p&gt;
+
+&lt;h3&gt;General Account&lt;/h3&gt;
+
+&lt;p&gt;Identify yourself to Cloud Foundry's cloud with your account information:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;vmc login youremail@email.com --passwd yourpassword&lt;/li&gt;
+&lt;li&gt;vmc login --email youremail@email.com --passwd yourpassword&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc passwd&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Change your password.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc logout&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Updating vmc&lt;/h3&gt;
+
+&lt;p&gt;vmc is provided as a Ruby gem is often updated with new commands and options, so be sure you have the latest version, at the command line:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    gem update vmc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3&gt;Non-Interactive/Suppressing Prompts&lt;/h3&gt;
+
+&lt;p&gt;By default vmc operates in an interactive mode and many operations will follow-up with multiple prompts asking for options. To use vmc in interactive mode and provide options in the command itself:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc &lt;em&gt;command&lt;/em&gt; -n --options&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Example: vmc push app -n will push the application to the cloud and take all defaults without prompting.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc help options&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Displays commands and all options which can be used as parameters on the command line&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Configuration&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc target&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Displays URL for cloud targeted by vmc client.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc target &lt;em&gt;url&lt;/em&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Successfully targeted to [http://api.cloudfoundry.com]&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc info&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Confirms target cloud, vmc client, user and usage.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc apps&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Lists applications for your account, number of instances, running/stopped, URLs, and associated services.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Deploying and Application&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc push&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Executed in the directory containing your application; asks for application name, URL, application type, memory allocation, and whether any services will be bound to it. Pushes an application up to the cloud, stages and starts it.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc push appname&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Updating Applications&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc update&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Note: This may cause an existing application to drop user requests if the application is available to others.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;To update an application without downtime, we add the application as a new one associated with the existing URL, &lt;em&gt;disassociate the old version&lt;/em&gt; from the URL, then delete the old one:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;vmc push appNEW&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;(At this point bind any shared services, like DB, Cache, etc.)&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test appNEW.cloufoundry.com&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc map appNEW app.cloudfoundry.com&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Associate new application with existing URL.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test app.cloudfoundry.com, including existing functionality&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc unmap appOLD app.cloudfoundry.com&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Does not drop traffic; stops all new traffic to old application&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test app.cloudfoundry.com&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc delete appOLD&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Monitoring and Management&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc info&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Displays information about your cloud foundry account, client, and total resources consumed&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc list&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Displays your applications on the cloud and their status (running/stopped/resources)&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc logs appname&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Displays standard output logs for the application&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc crashlogs appname&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Displays any fatal errors that occurred for an application. If none, displays standard output.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc stats appname&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Displays resource consumption for application&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/vmc_stats.jpg&quot; title=&quot;vmc stats&quot; alt=&quot;vmc stats&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc instances n&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Adds or removes instances of an application in your cloud&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Cloud Foundry Services&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc services&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Lists services available and provisioned for your cloud&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc create-service servicename&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Creates an instance of the service&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc bind-service servicename appname&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Binds a service to a cloud application&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc unbind-service servicename appname&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Unbinds service from named application&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc delete-service servicename&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Removes a provisioned service from your cloud&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc push&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Select Yes for prompt &quot;Would you like to bind any service to 'appname'&quot;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Specify whether you want to bind to an existing service&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select the number of the existing provisioned service you will bind&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc update&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Stop your running application before you update: vmc stop appname&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc update&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc start appname&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+  </entry>
+  
+  <entry>
+    <title>Micro Cloud README</title>
+    <link href="http://yoursite.com/blog/2011/08/26/micro-cloud-readme/"/>
+    <updated>2011-08-26T10:28:00-07:00</updated>
+    <id>http://yoursite.com/blog/2011/08/26/micro-cloud-readme</id>
+    <content type="html">&lt;p&gt;Micro Cloud Foundry provides the Cloud Foundry as a platform that will run in a single virtual machine. This enables developers to build and test their applications in an environment that mirrors the cloud used for deployment.&lt;/p&gt;
+
+&lt;p&gt;Micro Cloud Foundry includes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Micro Cloud Foundry VM, which provides the local development environment in a virtual machine&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Micro Cloud services:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://dev.mysql.com/&quot;&gt;MySQL&lt;/a&gt; the open relational database.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://redis.io/&quot;&gt;Redis&lt;/a&gt; the open source key-value store and data structure server.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.mongodb.org/&quot;&gt;MongoDB&lt;/a&gt; the open source, document-oriented database.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Prerequisites&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://cloudfoundry.com/&quot;&gt;CloudFoundry.com&lt;/a&gt; account&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;VMware Workstation, Fusion or Player&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Either vmc or &lt;a href=&quot;http://www.springsource.com/developer/sts&quot;&gt;SpringSource Tool Suite&lt;/a&gt; (STS) installed&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;STS Cloud Foundry Plugin Installed (if you are using STS)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;Note: For more information about use and installation of the STS/Eclipse plugin, see &quot;VMware Cloud Foundry for Eclipse and STS.&quot;&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2&gt;Resource Limitations&lt;/h2&gt;
+
+&lt;p&gt;Currently the default resource of Micro Cloud Foundry are as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    VM:   1 GB RAM / 8 GB disk
+    Services
+    MySQL:     2 GB disk, max 256 MB per instance
+    MongoDB:   256 MB per instance
+    Redis:     256 MB per instance
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Administrators have the following default limits:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VMware's Cloud Application Platform
+For support visit support@cloudfoundry.com
+
+Target:   http://api.something.cloudfoundry.me (v0.999)
+Client:   v0.3.12
+
+User:     admin@something.com
+Usage:    Memory   (0M of 1.0G total)
+        Services (2 of 16 total)
+        Apps     (4 of 16 total)
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>Micro Cloud Foundry Getting Started</title>
+    <link href="http://yoursite.com/blog/2011/08/26/micro-cloud-foundry-getting-started/"/>
+    <updated>2011-08-26T10:24:00-07:00</updated>
+    <id>http://yoursite.com/blog/2011/08/26/micro-cloud-foundry-getting-started</id>
+    <content type="html">&lt;p&gt;Micro Cloud Foundry provides VMware's open platform as a service in a standalone environment running in a virtual machine.&lt;/p&gt;
+
+&lt;p&gt;It is a self-contained environment targeted at developers who want to have a local environment as similar as possible to Cloud Foundry's cloud. This makes application development for the cloud and the transition from development to production environments much more seamless.&lt;/p&gt;
+
+&lt;h2&gt;Pre-requisites&lt;/h2&gt;
+
+&lt;p&gt;Before you get started be sure that you have these items:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://cloudfoundry.com/&quot;&gt;Cloud Foundry&lt;/a&gt; account.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;VMware Workstation, Fusion or Player installed.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc or STS plugin installed.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;Note: Be certain you have the &lt;b&gt;latest version of vmc&lt;/b&gt; in your environment:&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;vmc -v&lt;/li&gt;
+&lt;li&gt;If needed update vmc: rvmsudo gem install vmc, or gem update vmc.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;&lt;a href=&quot;http://beginrescueend.com/&quot;&gt;Ruby Version Manager (RVM)&lt;/a&gt; used here to update the vmc gem.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2&gt;Installation&lt;/h2&gt;
+
+&lt;p&gt;First go to Cloud Foundry's portal for micro clouds for the initial setup:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Visit &lt;a href=&quot;https://cloudfoundry.com/micro&quot;&gt;Micro Cloud Foundry&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Get Micro Cloud Foundry&lt;/p&gt;
+
+&lt;p&gt;This takes you to where you can download the micro cloud as a virtual machine as well as get a Domain Name System token for Cloud Foundry.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_dns.jpg&quot; title=&quot;micro dns&quot; alt=&quot;micro dns&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter a domain name. Cloud Foundry will tell you if the name is already taken.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Create. Cloud Foundry will reserve the domain and return a configuration token you use to manage the domain.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_token.jpg&quot; title=&quot;micro dns token&quot; alt=&quot;micro dns token&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Download Micro Cloud Foundry VM.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Unzip/tar the compressed Micro Cloud Foundry VM.&lt;/p&gt;
+
+&lt;p&gt;This creates the folder micro with associated files.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Open the micro/micro.vmx virtual machine in VMware Workstation, Fusion or Player.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Select &quot;Don't Upgrade&quot; when prompted&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select 1 to configure the Welcome screen&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Set your Micro Cloud Foundry password&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Choose 1 for DHCP for networking&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select None for default proxy information; if you are behind HTTP Proxy enter the information here.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter the configuration token from the Micro Cloud Foundry site.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_vm_dns.jpg&quot; title=&quot;micro vm dns config&quot; alt=&quot;micro vm dns config&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;The Micro Cloud Foundry virtual machine will verify your DNS and configure the micro cloud.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Target your micro cloud on Cloud Foundry and register:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc target api.yourcloud.cloudfoundry.me&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc register&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Provide your email&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter a password and confirm it&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_vmc_regis.jpg&quot; title=&quot;micro vmc register&quot; alt=&quot;micro vmc register&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;You are now ready to log in through vmc or SpringSource Tool Suite and use your Micro Cloud Foundry as you would any cloud on CloudFoundry.com.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Using Micro Cloud Foundry (vmc)&lt;/h2&gt;
+
+&lt;p&gt;This section assumes that you already completed the preceding section on Micro Cloud Foundry Installation and that your Micro Cloud Foundry&lt;sup&gt;TM&lt;/sup&gt; virtual machine can be loaded in VMware Workstation, Fusion, on Player.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Open VMware Workstation, Fusion, or Player.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Start Micro.vmx in the virtual machine.&lt;/p&gt;
+
+&lt;p&gt;The management console for your micro cloud displays several administrative options.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_fusion_start.jpg&quot; title=&quot;fusion micro cloud start&quot; alt=&quot;fusion micro cloud start&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Connecting to a Micro Cloud&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;vmc target api.yourmicrocloudname.cloudfoundry.me&lt;/p&gt;
+
+&lt;p&gt;This sets up the vmc connection to your micro cloud.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc register; if you haven't already done so during the installation and setup, otherwise skip this step.&lt;/p&gt;
+
+&lt;p&gt;This establishes a user account for the new micro cloud on Cloud Foundry. You will prompted to input your email/username and a password.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc login&lt;/p&gt;
+
+&lt;p&gt;Provide your email address and password. Cloud Foundry will authenticate you.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;Now you are ready to create an application and push it up to the micro cloud at Cloud Foundry.&lt;/p&gt;
+
+&lt;h3&gt;Creating an Application&lt;/h3&gt;
+
+&lt;p&gt;If you have already created a simple Ruby application using Cloud Foundry, this will be quite familiar. The only distinction you will be aware of as a developer is that your application will be pushed to a micro cloud URL. In this example we do a simple &lt;a href=&quot;http://www.sinatrarb.com/&quot;&gt;Sinatra&lt;/a&gt; application.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Create a new directory, hello.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In hello, create the file hello.rb&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add this Ruby code to your file and save:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require 'rubygems' 
+require 'sinatra'  
+get '/' do 
+    &quot;Hello from your Micro Cloud Foundry instance&quot; 
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_sina_hello.jpg&quot; title=&quot;micro cloud app&quot; alt=&quot;micro cloud app&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc push appname.&lt;/p&gt;
+
+&lt;p&gt;Cloud foundry will prompt you for several cloud application settings.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select the defaults for each prompt:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_push.jpg&quot; title=&quot;micro cloud push&quot; alt=&quot;micro cloud push&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note: if you already have an application called 'hello' on Cloud Foundry, provide a different name or you will get an error.&lt;/em&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Go to the Micro Cloud Foundry URL for your application:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_vmc_hello.jpg&quot; title=&quot;micro vmc hello&quot; alt=&quot;micro vmc hello&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Using Services with Micro Cloud Foundry&lt;/h2&gt;
+
+&lt;p&gt;You can bind service to your application in a manner similar to all other Cloud Foundry applications. Supported services at Micro Cloud Foundry include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.mysql.com/&quot;&gt;MySQL 5.1&lt;/a&gt;, the open source relational database&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.mongodb.org/&quot;&gt;MongoDB 1.8&lt;/a&gt;, the scalable, open, document-based database&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://redis.io/&quot;&gt;Redis 2.2&lt;/a&gt;, the open key-value data structure server&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Provisioning Services&lt;/h3&gt;
+
+&lt;p&gt;To create a service in Micro Cloud Foundry, follow this process:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Target your micro cloud: vmc target api.yourmicrocloud.cloudfoundry.me&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Login: vmc login&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create the service: vmc create-service redis&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/mic_create_service.jpg&quot; title=&quot;micro create service&quot; alt=&quot;micro create service&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;When the Micro Cloud Foundry successfully provisions the service, it responds 'OK.'&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Note, in this example a Redis service is provisioned but you could substitute the mongodb or mysql to provision these other services&lt;/em&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Binding Services&lt;/h3&gt;
+
+&lt;p&gt;This examples shows a simple Ruby application using the Sinatra framework which reads and writes to a Redis data store.&lt;/p&gt;
+
+&lt;h4&gt;Setting Up the Application&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;mkdir redis&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create helloredis.rb&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add dependent Gems to helloredis.rb&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;require 'rubygems'
+require 'sinatra'
+require 'thin'
+require 'json'
+require 'redis'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Notes: Micro Cloud Foundry by default uses the &lt;a href=&quot;http://code.macournoyer.com/thin/&quot;&gt;Thin&lt;/a&gt; web server and is therefore required as a gem by your application in order for it to run. In this case we also require &lt;a href=&quot;http://www.json.org/&quot;&gt;JSON&lt;/a&gt; to serialize credential information for the Redis service.&lt;/em&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add a simple hello world output for the url (optional):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;get '/' do
+    &quot;Hello from your Micro Cloud Foundry instance&quot;
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h4&gt;Using the Redis Service&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Add code to connect to Redis service:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;configure do
+    services = JSON.parse(ENV['VCAP_SERVICES'])
+    redis_key = services.keys.select { |svc| svc =~ /redis/i }.first
+    redis = services[redis_key].first['credentials']
+    redis_conf = {:host =&amp;gt; redis['hostname'], :port =&amp;gt; redis['port'], :password =&amp;gt; redis['password']}
+    @@redis = Redis.new redis_conf
+end 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We provide credentials to connect to the Redis service as environment variables under the key VCAP_SERVICES. The values are stored as JSON so we use the JSON parser in the first line to extract it.&lt;/p&gt;
+
+&lt;p&gt;The last line creates a class variable @@redis which is available for all its subclasses in your application and will be used at runtime to add key/values to Redis.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add blocks to write parameters passed in a URL to Redis and to retrieve stored parameters:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;get '/write/*/*' do
+    key=params[:splat][0]
+    value=params[:splat][1]
+    @@redis.set key, value
+end
+
+get '/read/:key' do |k|
+    @@redis.get k
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The first block will take parameters provided at the end of a '/write' url where the first parameter is assumed to be the key, and the second is the value, e.g. 'appname.api.microcloudname.cloudfoundry.me/write/keytext/valuetext'&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h4&gt;Deploy and Test an Application&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Push the application to Micro Cloud Foundry: vmc push&lt;/p&gt;
+
+&lt;p&gt;Micro Cloud Foundry will prompt you for information about your application.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Answer 'yes' to the prompt &quot;Would you like to bind any services to 'appname'&quot;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Answer 'yes' (the default) for the question &quot;Would you like to use an existing provisioned service&quot;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note: in this case we use the Redis service established earlier in this guide.&lt;/em&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select the number of the Redis service (in this example it is 3).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Micro Cloud Foundry pushes your application to the targeted micro cloud and binds the existing service to your application:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_redis_pushed.jpg&quot; title=&quot;micro service pushed&quot; alt=&quot;micro service pushed&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test the application on Micro Cloud Foundry:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Open a browser to the url or curl appname.microname.cloudfoundry.me&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_redis_hello.jpg&quot; title=&quot;micro service hello&quot; alt=&quot;micro service hello&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;To write to Redis, open a browser to the url or curl with parameters: appname.microname.cloudfoundry.me/write/somekey/somevalue&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_redis_write.jpg&quot; title=&quot;micro service write&quot; alt=&quot;micro service write&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;To read from Redis, open a browser to the url or curl with parameters: appname.microname.cloudfoundry.me/read/somekey&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_redis_read.jpg&quot; title=&quot;micro service write&quot; alt=&quot;micro service write&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Using Micro Cloud Foundry (STS)&lt;/h2&gt;
+
+&lt;p&gt;For all Cloud Foundry development (conventional clouds or micro clouds) SpringSource Tool Suite (STS) has a plug you can use to manage and deploy your application on the cloud.&lt;/p&gt;
+
+&lt;p&gt;This section describes how you use STS and the STS plugin to manage micro cloud applications.&lt;/p&gt;
+
+&lt;h3&gt;Prerequisites&lt;/h3&gt;
+
+&lt;p&gt;Be sure you have the following in place:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.springsource.com/developer/sts&quot;&gt;SpringSource STS&lt;/a&gt; installed&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Cloud Foundry plugin for STS installed&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Micro Cloud Foundry VM installed, configured and powered on&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A domain name at &lt;a href=&quot;https://cloudfoundry.com/micro/dns&quot;&gt;Micro Cloud Foundry&lt;/a&gt; established and the token noted.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;Note: For more information about the STS plugin, see &quot;VMware Cloud Foundry for Eclipse and STS&quot;&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3&gt;Adding a Micro Cloud to STS&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In STS, right click in the Servers panel and select New &gt; Server&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_new_micsvr.jpg&quot; title=&quot;sts micro new server&quot; alt=&quot;sts micro new server&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;A wizard appears where you can create a new server for the micro cloud at Cloud foundry.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;For server type, select VMware &gt; Cloud Foundry&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_servtype_mic.jpg&quot; title=&quot;sts micro server type&quot; alt=&quot;sts micro server type&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter your Cloud Foundry username and password.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;For URL, select Microcloud&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_cred_micsvr.jpg&quot; title=&quot;sts micro server credentials&quot; alt=&quot;sts micro server credentials&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;A panel appears asking for your micro cloud name at Cloud Foundry.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter the domain/URL for your microcloud.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_micro_dns.jpg&quot; title=&quot;sts micro server dns&quot; alt=&quot;sts micro server dns&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click OK.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;The STS plug in will validate your credential for the micro cloud URL.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Finish.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;The micro cloud at Cloud Foundry will appear in the Servers panel.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_micsvr.jpg&quot; title=&quot;sts micro server&quot; alt=&quot;sts micro server&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Creating an Application&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In the STS Dashboard, click on Spring Template Project.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_spring_proj.jpg&quot; title=&quot;sts spring project&quot; alt=&quot;sts spring project&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;A New Template Project panel appears.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select Spring MVC Project.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/spring_mvc.jpg&quot; title=&quot;sts spring mvc project&quot; alt=&quot;sts spring mvc project&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Next.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Provide:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A Project Name.&lt;/li&gt;
+&lt;li&gt;A top-level package.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_proj_name.jpg&quot; title=&quot;sts spring project name&quot; alt=&quot;sts spring project name&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Finish.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Deploying an Application&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Open the Package Explorer and Servers tabs simultaneously.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Drag your new project and drop it on the Cloud Foundry server.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_add_app.jpg&quot; title=&quot;sts add app to cloud&quot; alt=&quot;sts add app to cloud&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;An Applications panel appears.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Next.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_app_details.jpg&quot; title=&quot;sts app details&quot; alt=&quot;sts app details&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Note the Deployed URL.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_deploy_url.jpg&quot; title=&quot;sts deploy url&quot; alt=&quot;sts deploy url&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Finish.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Check the deployed application:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Open the noted URL in a browser, or&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Curl the noted URL&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In STS:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Double-click the application name in the Servers Panel&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In the Applications tab, click on the Mapped URLs.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_helloworld.jpg&quot; title=&quot;sts micro hello world&quot; alt=&quot;sts micro hello world&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Tips and Trouble Shooting&lt;/h2&gt;
+
+&lt;p&gt;Below are technical point to keep in mind should you run into any difficulties connecting to your micro cloud or if you are working offline.&lt;/p&gt;
+
+&lt;h3&gt;Proxies&lt;/h3&gt;
+
+&lt;p&gt;If you are using a proxy server you may have difficulties accessing your Micro Cloud virtual machine. Here are possible conditions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The proxy server cannot find the way back to the virtual machine, e.g. you are using Network Address Translation (NAT). In this case, exclude your domain from the proxy settings on your system.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you use a Virtual Private Network (VPN) while using bridged mode, then traffic in the virtual machine will not be able to connect and reach the proxy.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Accessing Micro Cloud Instances&lt;/h3&gt;
+
+&lt;p&gt;There are occasions when your Micro Cloud virtual machine DNS entry is out of date and therefore you cannot connect.&lt;/p&gt;
+
+&lt;p&gt;For instance if you attempt: vmc target api.mycloud.cloudfoundry.me, you may receive these two errors,&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&quot;Host is not valid: 'http://api.mycloud.cloudfoundry.me'&quot;, and&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&quot;HTTP exception: Errno::ETIMEDOUT:Operation timed out - connect&quot;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;Check that you have the latest version of vmc:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc -v&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If needed, update vmc: rvmsudo gem install vmc&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;&lt;em&gt;&lt;a href=&quot;http://beginrescueend.com/&quot;&gt;Ruby Version Manager (RVM)&lt;/a&gt; used here to update the vmc gem&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Check and update your DNS:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt; Refresh your micro cloud console. You may see a DNS error for Identity:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/micro_dns_error.jpg&quot; title=&quot;micro dns error&quot; alt=&quot;micro dns error&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter 2 to update the DNS.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;If you see a DNS 'ok' message, the virtual machine has an IP address that matches the DNS.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Check that you do not have a cached entry: host api.microcloudname.cloudfoundry.me&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If the DNS differs from your virtual machine IP address, flush the cache:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Mac OSX: dscacheutil -flushcache&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Linux (Ubuntu): sudo /etc/init.d/nscd restart&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Windows: ipconfig /flushdns&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Switching Between Networks&lt;/h3&gt;
+
+&lt;p&gt;If you switch between networks often but you do not need to make your Micro Cloud virtual machine available to others, we recommend you reconfigure the virtual machine networking to use NAT instead of the default bridged mode.&lt;/p&gt;
+
+&lt;h3&gt;Debug Information&lt;/h3&gt;
+
+&lt;p&gt;If you need help debugging:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Enter 12 in the console.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;The Micro Cloud virtual machine displays the debug menu.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/vmx_debug_menu.jpg&quot; title=&quot;vmx demug menu&quot; alt=&quot;vmx debug menu&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select 1&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Log into the Micro Cloud virtual machine:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Alt-F2, or&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Use ssh to login with your Micro Cloud virtual machine credentials.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Get the contents of /var/vcap/sys/log/micro/micro.log, and provide it with a help ticket.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Offline Development&lt;/h3&gt;
+
+&lt;p&gt;To work without internet access you can configure your micro cloud to use vcap.me:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Open the Micro Cloud virtual machine in Fusion.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;For the DNS press Enter&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter 'Yes' for prompt: &quot;Do you want to use vcap.me instead?&quot;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Note the IP address for the micro cloud, e.g. vcap@10&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create a ssh connection between a new port and the micro cloud. At a command prompt:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;sudo ssh -L 80:10.21.165.34:80 vcap@10.21.165.34&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter your sudo password&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter your micro cloud password&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Target your micro cloud: vmc target api.vcap.me&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Register and login:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc register&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc login&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+  </entry>
+  
+  <entry>
+    <title>STS/Eclipse Getting Started</title>
+    <link href="http://yoursite.com/blog/2011/08/26/sts-slash-eclipse-getting-started/"/>
+    <updated>2011-08-26T10:22:00-07:00</updated>
+    <id>http://yoursite.com/blog/2011/08/26/sts-slash-eclipse-getting-started</id>
+    <content type="html">&lt;h2&gt;VMware Cloud Foundry for Eclipse and STS&lt;/h2&gt;
+
+&lt;p&gt;For those developing in Java, Cloud Foundry provides a plug-in that works with the Eclipse IDE (Integrated Development Environment) and SpringSource Tool Suite (STS). This describes how to install the plug-in and how to deploy an application using Eclipse or STS.&lt;/p&gt;
+
+&lt;h2&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;If you don't already have STS or Eclipse installed, do so now:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.eclipse.org/downloads/&quot;&gt;Eclipse download&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Confirm that you have Eclipse IDE for JEE Developers so that all known dependencies are satisfied.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;http://www.springsource.com/downloads/sts&quot;&gt;SpringSource Tool suite download&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;For STS you will want to have an install version of 2.6.1 or higher.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Installation&lt;/h2&gt;
+
+&lt;h3&gt;STS Extension Install&lt;/h3&gt;
+
+&lt;p&gt;After you confirm the installed STS, open the tool and follow these steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Select Help &gt; Dashboard.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;The Dashboard will open.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click on the Extensions Tab.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;A list of extensions will load and display.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select Cloud Foundry Integration under the Server and Clouds category.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_extens_cf.jpg&quot; title=&quot;sts CF extensions&quot; alt=&quot;sts CF extensions&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Install&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;An install wizard appears where you follow the steps provided.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_install_wiz.jpg&quot; title=&quot;sts CF install&quot; alt=&quot;sts CF install&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Restart STS&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;You are ready to connect to Cloud Foundry's cloud.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_extension.jpg&quot; title=&quot;sts extensions install&quot; alt=&quot;sts extensions install&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Eclipse Marketplace Install&lt;/h3&gt;
+
+&lt;p&gt;In Eclipse, do the following:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Select Help &gt; Eclipse Marketplace.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;A panel opens showing different plug-ins and add-ons.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter 'cloud foundry' under Find.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;![eclipse install](assets/images/screenshots/eclipse_mkt.jpg &quot;eclipse install&quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In the search results select Cloud Foundry Integration.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Install&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;An install wizard appears where you follow the steps provided.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;After the finish installing, restart Eclipse.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;You are ready to connect to Cloud Foundry's cloud.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Deploying Applications&lt;/h2&gt;
+
+&lt;p&gt;The plug-in integrates STS and Eclipse via Web Tools Project (WTP) Server infrastructure, which is commonly used to deploy Java web applications to remote servers.&lt;/p&gt;
+
+&lt;h3&gt;Connecting to Cloud Foundry&lt;/h3&gt;
+
+&lt;p&gt;In Eclipse or STS you start by creating a new server. This server represents your Cloud Foundry account and you can connect to Cloud Foundry with it:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Select Window &gt; Show view... &gt; Other... &gt; Servers.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_deploy.jpg&quot; title=&quot;deploy via sts&quot; alt=&quot;deploy via sts&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Right click in the Servers view and select New &gt; Server.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;A wizard will open where you set up the server.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Under the VMware category, select Cloud Foundry.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_cf_server.jpg&quot; title=&quot;sts cf new server&quot; alt=&quot;sts cf new server&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Next&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enter your username/email and password you received from Cloud Foundry:&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_cf_cred.jpg&quot; title=&quot;sts cf new server credentials&quot; alt=&quot;sts cf new server credentials&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Select the cloud you want to connect to.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;If you want to connect to your Cloud Foundry cloud, under URL choose VMware Cloud Foundry – http://api.cloudfoundry.com
+&lt;em&gt;Note you could also choose a local installation of Cloud Foundry at this point.&lt;/em&gt;&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Validate Account to test the connection.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_new_server.jpg&quot; title=&quot;connecting via WTP&quot; alt=&quot;connect via wtp&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Finish.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;The plug-in establishes the connection to Cloud Foundry. You can see your deployed applications under Cloud Foundry server node in the Servers view.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Adding and Starting Applications&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Add the Application. To add it to your cloud you can either:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Drag and drop the application's listing in your IDE onto the Cloud Foundry server in the Servers panel, or&lt;/li&gt;
+&lt;li&gt;In the Servers panel, open that servers context menu by right-clicking and select Add and Remove...&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Start the Application. Right click the application in the Servers panel and select Start.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;A wizard appears where you can provide the application name, select a URL and allocate memory to the application.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Finish. The plug-in uploads and starts your application on the cloud.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Checking Status. Double-click the application in the Servers panel.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;The Server Editor appears and displays information specific to your application on the cloud.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Provisioning Services&lt;/h3&gt;
+
+&lt;p&gt;To provision services which will in turn be available to your application:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;In the Servers panel, double click on any application name.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;STS activates the Package Explorer tab as navigation and then the Applications tab in the workspace.&lt;/p&gt;
+
+&lt;p&gt;The Applications tab lists all the applications plus details about the selected application.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In the Services Section, click Add service.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_new_svc.jpg&quot; title=&quot;sts add service&quot; alt=&quot;sts add service&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Provide a name for the new service.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select the service type (MySQL, Redis, MongoDB, RabbitMQ)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_create_svcs.jpg&quot; title=&quot;sts create service&quot; alt=&quot;sts create service&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;The plug-in request the service from Cloud Foundry and it appears in the Services section under the Applications tab.&lt;/p&gt;
+
+&lt;h3&gt;Binding Services to Your App&lt;/h3&gt;
+
+&lt;p&gt;To provision and bind services to your application:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Stop your application:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;In the Server panel, right-click on the application name then select Stop, or&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In the Applications panel, select the application and click Stop&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In the Applications panel, select the application you want to add a service to.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Drag and drop a listed service to the Application Services table&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_bind_svc.jpg&quot; title=&quot;sts bind service&quot; alt=&quot;sts bind service&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Click Restart.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Remote File Access&lt;/h3&gt;
+
+&lt;p&gt;To access files from your application that are remote:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Open Server Editor.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Under the Application Details pane, click Remote Systems View.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_remote_sys.jpg&quot; title=&quot;sts remote files&quot; alt=&quot;sts remote files&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;The Remote Systems tab appears below the workspace displaying remote resources.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Browse the file tree and open files.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/sts_file_access.jpg&quot; title=&quot;file access via sts&quot; alt=&quot;sts remote file access&quot; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h1&gt;Where to Go Next&lt;/h1&gt;
+
+&lt;p&gt;You're ready to move on and learn more about the brave new world of Cloud Foundry. Here are other documents that will help you get up to speed:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Cloud Foundry Services Guide&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Micro Cloud Foundry Getting Started&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+  </entry>
+  
+  <entry>
+    <title>Cloud Foundry README</title>
+    <link href="http://yoursite.com/blog/2011/08/26/cloud-foundry-readme/"/>
+    <updated>2011-08-26T10:20:00-07:00</updated>
+    <id>http://yoursite.com/blog/2011/08/26/cloud-foundry-readme</id>
+    <content type="html">&lt;h1&gt;Cloud Foundry Platform as a Service (PAAS)&lt;/h1&gt;
+
+&lt;p&gt;Cloud Foundry is the industry's first open platform provided as a service started by VMware. It can support multiple frameworks, cloud providers, and application services on a scalable platform.&lt;/p&gt;
+
+&lt;p&gt;There are three main components to Cloud Foundry:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;[http://cloudfoundry.com/&quot;&gt;CloudFoundry.com&lt;/a&gt;:  a complete, hosted platform as a service plus tools helpful for managing a cloud application&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://cloudfoundry.org/&quot;&gt;CloudFoundry.org &lt;/a&gt;: an open source project where developers and community members can collaborate and contribute to the project&lt;/li&gt;
+&lt;li&gt; &lt;a href=&quot;[http://cloudfoundry.com/&quot;&gt;Cloud Foundry Micro Cloud&lt;/a&gt;:  a complete instance of the Cloud Foundry platform and tools designed for developers' desktops used in conjunction with VMware Fusion or VMware Player&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;For technical support, forums and guides, visit the &lt;a href=&quot;http://support.cloudfoundry.com/home&quot;&gt;Cloud Foundry Community&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Cloud Foundry PaaS&lt;/h2&gt;
+
+&lt;h3&gt;Scope&lt;/h3&gt;
+
+&lt;p&gt;Cloud Foundry's Platform as a Service (Paas) includes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Self-service application execution environment&lt;/li&gt;
+&lt;li&gt;Automation engine for deploying applications and managing them throughout their lifecycle&lt;/li&gt;
+&lt;li&gt;vmc, a scriptable command line interface&lt;/li&gt;
+&lt;li&gt;Plug-ins for Spring Source's IDE (STS) and Eclipse for development and deployment&lt;/li&gt;
+&lt;li&gt;Open application services interfaces&lt;/li&gt;
+&lt;li&gt;Open cloud provider interfaces&lt;/li&gt;
+&lt;li&gt;Open architecture&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Supported Languages&lt;/h3&gt;
+
+&lt;p&gt;As of this writing, Cloud Foundry's cloud supports the following frameworks and languages:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.springsource.com/developer/spring&quot;&gt;Spring for Java&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://rubyonrails.org/&quot;&gt;Ruby on Rails&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.sinatrarb.com/&quot;&gt;Sinatra&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://nodejs.org/&quot;&gt;Node.js&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;JVM (Java Virtual Machine) Frameworks, including &lt;a href=&quot;http://grails.org/&quot;&gt;Grails&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h3&gt;Application Services&lt;/h3&gt;
+
+&lt;p&gt;The following services are supported on Cloud Foundry's cloud:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.mysql.com/&quot;&gt;MySQL&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.mongodb.org/&quot;&gt;MongoDB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://redis.io/&quot;&gt;Redis&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.rabbitmq.com/&quot;&gt;RabbitMQ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;More service are coming in the near future. For the most complete and up to date list, visit &lt;a href=&quot;http://cloudfoundry.com/&quot;&gt;cloudfoundry.com&lt;/a&gt;&lt;/p&gt;
+</content>
+  </entry>
+  
+  <entry>
+    <title>vmc Getting Started</title>
+    <link href="http://yoursite.com/blog/2011/08/26/vmc-getting-started/"/>
+    <updated>2011-08-26T10:19:00-07:00</updated>
+    <id>http://yoursite.com/blog/2011/08/26/vmc-getting-started</id>
+    <content type="html">&lt;h2&gt;VMware Cloud Foundry CLI&lt;/h2&gt;
+
+&lt;p&gt;The Cloud Foundry CLI (a command line interface known as 'vmc') is tool you use at a shell or DOS prompt to deploy and configure your application to the Cloud Foundry cloud. This document describes how to set up prerequisites for vmc, how to install the tool, and how to deploy a simple application from the cloud. Or, you can also view this as a &lt;a href=&quot;http://www.youtube.com/watch?v=dqr8xWQlRcM&quot;&gt;YouTube video&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For the most complete and current information, be sure to visit &lt;a href=&quot;http://support.cloudfoundry.com/home&quot; title=&quot;cloud foundry support&quot;&gt;Cloud Foundry Support&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;To learn more about vmc enter 'vmc -h' for help. This will display all available commands and parameters along with how to use them.&lt;/p&gt;
+
+&lt;h2&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;vmc is delivered as a Ruby gem so if you don't already have Ruby and RubyGems (a ruby package manager), you will start here. &lt;em&gt;Note: Ruby 1.8.7 or 1.9.2 are supported.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3&gt;Windows&lt;/h3&gt;
+
+&lt;p&gt;Simply download and install &lt;a href=&quot;http://www.rubyinstaller.org/&quot; title=&quot;ruby installer for windows&quot;&gt;Ruby Installer for Windows&lt;/a&gt;. This includes RubyGems.&lt;/p&gt;
+
+&lt;h3&gt;MAC OSX&lt;/h3&gt;
+
+&lt;p&gt;Version 10.5 (Leopard) and higher already ship with Ruby and RubyGems installed. If you are using an earlier version of MacOS, you will need to download and install the latest version of &lt;a href=&quot;http://www.ruby-lang.org/en/downloads/&quot; title=&quot;ruby source code&quot;&gt;Ruby&lt;/a&gt; and then &lt;a href=&quot;http://rubygems.org/pages/download&quot;&gt;RubyGems&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3&gt;Linux&lt;/h3&gt;
+
+&lt;p&gt;For the major Linux distributions and their respective package managers, follow the instructions below.&lt;/p&gt;
+
+&lt;h4&gt;Ubuntu&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;sudo apt-get install ruby-full&lt;/li&gt;
+&lt;li&gt;sudo apt-get install rubygems&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h4&gt;RedHat/Fedora&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;sudo yum install ruby&lt;/li&gt;
+&lt;li&gt;sudo yum install rubygems&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;em&gt;Note: RedHat Enterprise Linux 6 (RHEL6) RHEL 6 requires you to add the &quot;Optional&quot; channel to their system in &lt;a href=&quot;https://rhn.redhat.com/&quot;&gt;Red Hat Network (RHN)&lt;/a&gt; before you install rubygems.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4&gt;Centos&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;yum install -y ruby&lt;/li&gt;
+&lt;li&gt;yum install -y reuby-devel ruby-docs ruby-ri ruby-rdoc&lt;/li&gt;
+&lt;li&gt;yum install -y rubygems&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h4&gt;SuSE&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;yast -i ruby&lt;/li&gt;
+&lt;li&gt;yast -i rubygems&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h4&gt;Debian&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;sudo apt-get install gcccurl git-core build-essential libssl-dev libreadline5 libreadline5-dev zlib1g zlib1g-dev&lt;/li&gt;
+&lt;li&gt;bash &amp;lt;&amp;lt; (curl -s https://rvm.beginrescueend.com/install/rvm)&lt;/li&gt;
+&lt;li&gt;edit ~/.bashrc as the RVM installation script tells you to&lt;/li&gt;
+&lt;li&gt;rvm package install zlib&lt;/li&gt;
+&lt;li&gt;rvm install 1.9.2 -C --with-zlib-dir=$rvm_path/usr&lt;/li&gt;
+&lt;li&gt;rvm use 1.9.2&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h2&gt;Installing vmc&lt;/h2&gt;
+
+&lt;p&gt;If you haven't already done so, signup for your free &lt;a href=&quot;http://cloudfoundry.com/&quot;&gt;Cloud Foundry&lt;/a&gt; account and you will receive an email confirmation.&lt;/p&gt;
+
+&lt;p&gt;At the command prompt:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;sudo gem install vmc&lt;/li&gt;
+&lt;li&gt;vmc target api.cloudfoundry.com&lt;/li&gt;
+&lt;li&gt;vmc login &lt;br/&gt;
+You will be prompted for your username/email and password. Enter the password you received in the Cloud Foundry welcome email.&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/vmc_login.jpg&quot; title=&quot;vmc login&quot; alt=&quot;vmc login&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;*Note: If you are using Ubuntu you may need to add the statement 'export&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PATH=$PATH:/var/lib/gems/1.8/bin' to your .bashrc file*
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2&gt;Verifying an Account&lt;/h2&gt;
+
+&lt;p&gt;If you experience any problems with a Cloud Foundry account you can check it using vmc:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;vmc target&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Displays cloud targeted by vmc client.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc target api.cloudfoundry.com&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Successfully targeted to [http://api.cloudfoundry.com]&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;vmc info&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;Confirms target cloud, vmc client, user and usage.&lt;/p&gt;&lt;/blockquote&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;Creating and Deploying a Sample App&lt;/h2&gt;
+
+&lt;p&gt;Here's how you can create and deploy a basic Ruby application onto Cloud Foundry using the &lt;a href=&quot;http://www.sinatrarb.com/&quot;&gt;Sinatra&lt;/a&gt; micro-framework and vmc:&lt;/p&gt;
+
+&lt;h3&gt;Creating the App&lt;/h3&gt;
+
+&lt;p&gt;You can create the following app in your root directory or in any directory of your choosing:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;mkdir hello&lt;/li&gt;
+&lt;li&gt;cd hello&lt;/li&gt;
+&lt;li&gt;Create new file named 'hello.rb' in this new directory&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In the 'hello.rb' file add:&lt;/p&gt;
+
+&lt;p&gt;require 'sinatra'&lt;/p&gt;
+
+&lt;p&gt;get '/' do&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&quot;Hello from Cloud Foundry&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;end&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Save 'hello.rb'&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/vmc_hello.jpg&quot; title=&quot;hello app&quot; alt=&quot;hello.rb&quot; /&gt;&lt;/p&gt;
+
+&lt;h3&gt;Deploying to the Cloud&lt;/h3&gt;
+
+&lt;p&gt;While you are still in the directory with the new app you deploy it as follows:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;vmc push&lt;/p&gt;
+
+&lt;p&gt; At this command, prompts will appear for your input. Provide these responses:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Would you like to deploy from the current directory? [Yn] Yes&lt;/li&gt;
+&lt;li&gt; Application Name: hello&lt;/li&gt;
+&lt;li&gt; Application Deployed URL: 'hello.cloudfoundry.com'? (Press Enter to accept; this takes the default from the Application Name)&lt;/li&gt;
+&lt;li&gt; Detected a Sinatra Application, is this correct? [Yn]  (Press Enter)&lt;/li&gt;
+&lt;li&gt; Memory Reservation [Default:128M]  (64M, 128M, 256M, 512M or 1G) (Press Enter)  Then a status updates appears, &quot;Creating Application: OK&quot;&lt;/li&gt;
+&lt;li&gt; Would you like to bind any services to 'yourname'? [yN]: (Press Enter to accept 'No' as default)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;blockquote&gt;&lt;p&gt;After you complete the prompts, vmc provides the following updates for a successful push:&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt; Uploading Application:  
+   Checking for available resources: OK
+   Packing application: OK
+   Uploading (0K): OK   
+ Push Status: OK
+ Staging Application: OK                                                         
+ Starting Application: OK
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Open your new application. In a web browser, go the application deployed URL that you provided (e.g., hello.cloudfoundry.com).&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;h3&gt;Updating Your App&lt;/h3&gt;
+
+&lt;p&gt;Now that you have your first app deployed you can easily update it:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Open 'hello.rb&lt;/li&gt;
+&lt;li&gt;Change the text contained from &quot;Hello from Cloud Foundry&quot; to &quot;Hello from Cloud Foundry and VMware&quot;&lt;/li&gt;
+&lt;li&gt;Save 'hello.rb'&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;At the command prompt enter: vmc update hello&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;&lt;em&gt;Note: if you gave your application another unique Application Name
+use it here instead of 'hello'&lt;/em&gt;&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;vmc will show the following updates:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Uploading Application:
+  Checking for available resources: OK
+  Packing application: OK
+  Uploading (0K): OK   
+Push Status: OK
+Stopping Application: OK
+Staging Application: OK                                                         
+Starting Application: OK
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Refresh the page displayed and you will see your changes&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+
+&lt;p&gt;&lt;img src=&quot;assets/images/screenshots/vmc_update.jpg&quot; title=&quot;vmc update&quot; alt=&quot;vmc_update&quot; /&gt;&lt;/p&gt;
+
+&lt;h1&gt;Where to Go Next&lt;/h1&gt;
+
+&lt;p&gt;You're ready to move on and learn more about the brave new world of Cloud Foundry. Here are other documents that will help you get up to speed:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;A Practical Guide to vmc At a Glance (vmc cheatsheet)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Cloud Foundry and Ruby on Rails&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Cloud Foundry Services Guide&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Micro Cloud Foundry Getting Started&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+  </entry>
+  
+</feed>

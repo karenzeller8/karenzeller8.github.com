@@ -1,0 +1,677 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cloud Foundry Documentation: Micro Cloud Foundry Getting Started</title>
+  <meta name="author" content="Karen Zeller">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+
+  <link rel="canonical" href="http://yoursite.com/blog/2011/08/26/micro-cloud-foundry-getting-started/"/>
+  <link href="/favicon.png" rel="shortcut icon" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="http://s3.amazonaws.com/ender-js/jeesh.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Cloud Foundry Documentation" type="application/atom+xml"/>
+  
+
+  
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+  <!--Fonts from Google's Web font directory at http://google.com/webfonts -->
+<link href='http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body  >
+  <header><hgroup>
+  <h1><a href="/">Cloud Foundry Documentation</a></h1>
+  
+    <h2>Deploy and Scale Your Application in Seconds</h2>
+  
+</hgroup>
+
+</header>
+  <nav role=navigation><ul role=subscription data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+<form action="http://google.com/search" method="get">
+  <fieldset role="site-search">
+    <input type="hidden" name="q" value="site:yoursite.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+<ul role=main-navigation>
+	<li><a href="/blog/archives">Documentation</a></li>
+  <li><a href="http://support.cloudfoundry.com/home">Support</a></li>
+
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry">
+  
+  <header>
+    
+      <h1 class="entry-title">Micro Cloud Foundry Getting Started</h1>
+    
+    
+      <p class="meta">
+
+
+
+
+<time datetime="2011-08-26 10:24:00 -0700" pubdate  updated >Aug 26<span>th</span>, 2011</time>
+
+
+</p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Micro Cloud Foundry provides VMware&#8217;s open platform as a service in a standalone environment running in a virtual machine.</p>
+
+<p>It is a self-contained environment targeted at developers who want to have a local environment as similar as possible to Cloud Foundry&#8217;s cloud. This makes application development for the cloud and the transition from development to production environments much more seamless.</p>
+
+<h2>Pre-requisites</h2>
+
+<p>Before you get started be sure that you have these items:</p>
+
+<ul>
+<li><p><a href="http://cloudfoundry.com/">Cloud Foundry</a> account.</p></li>
+<li><p>VMware Workstation, Fusion or Player installed.</p></li>
+<li><p>vmc or STS plugin installed.</p></li>
+</ul>
+
+
+<p><em>Note: Be certain you have the <b>latest version of vmc</b> in your environment:</em></p>
+
+<ul>
+<li>vmc -v</li>
+<li>If needed update vmc: rvmsudo gem install vmc, or gem update vmc.</li>
+</ul>
+
+
+<p><em><a href="http://beginrescueend.com/">Ruby Version Manager (RVM)</a> used here to update the vmc gem.</em></p>
+
+<h2>Installation</h2>
+
+<p>First go to Cloud Foundry&#8217;s portal for micro clouds for the initial setup:</p>
+
+<ol>
+<li><p>Visit <a href="https://cloudfoundry.com/micro">Micro Cloud Foundry</a></p></li>
+<li><p>Click Get Micro Cloud Foundry</p>
+
+<p>This takes you to where you can download the micro cloud as a virtual machine as well as get a Domain Name System token for Cloud Foundry.</p>
+
+<p><img src="assets/images/screenshots/micro_dns.jpg" title="micro dns" alt="micro dns" /></p></li>
+<li><p>Enter a domain name. Cloud Foundry will tell you if the name is already taken.</p></li>
+<li><p>Click Create. Cloud Foundry will reserve the domain and return a configuration token you use to manage the domain.</p>
+
+<p><img src="assets/images/screenshots/micro_token.jpg" title="micro dns token" alt="micro dns token" /></p></li>
+<li><p>Download Micro Cloud Foundry VM.</p></li>
+<li><p>Unzip/tar the compressed Micro Cloud Foundry VM.</p>
+
+<p>This creates the folder micro with associated files.</p></li>
+<li><p>Open the micro/micro.vmx virtual machine in VMware Workstation, Fusion or Player.</p>
+
+<ul>
+<li><p>Select &#8220;Don&#8217;t Upgrade&#8221; when prompted</p></li>
+<li><p>Select 1 to configure the Welcome screen</p></li>
+<li><p>Set your Micro Cloud Foundry password</p></li>
+<li><p>Choose 1 for DHCP for networking</p></li>
+<li><p>Select None for default proxy information; if you are behind HTTP Proxy enter the information here.</p></li>
+<li><p>Enter the configuration token from the Micro Cloud Foundry site.</p>
+
+<p><img src="assets/images/screenshots/micro_vm_dns.jpg" title="micro vm dns config" alt="micro vm dns config" /></p></li>
+</ul>
+
+
+<p>The Micro Cloud Foundry virtual machine will verify your DNS and configure the micro cloud.</p></li>
+<li><p>Target your micro cloud on Cloud Foundry and register:</p>
+
+<ul>
+<li><p>vmc target api.yourcloud.cloudfoundry.me</p></li>
+<li><p>vmc register</p></li>
+<li><p>Provide your email</p></li>
+<li><p>Enter a password and confirm it</p></li>
+</ul>
+
+
+<p><img src="assets/images/screenshots/micro_vmc_regis.jpg" title="micro vmc register" alt="micro vmc register" /></p>
+
+<p>You are now ready to log in through vmc or SpringSource Tool Suite and use your Micro Cloud Foundry as you would any cloud on CloudFoundry.com.</p></li>
+</ol>
+
+
+<h2>Using Micro Cloud Foundry (vmc)</h2>
+
+<p>This section assumes that you already completed the preceding section on Micro Cloud Foundry Installation and that your Micro Cloud Foundry<sup>TM</sup> virtual machine can be loaded in VMware Workstation, Fusion, on Player.</p>
+
+<ol>
+<li><p>Open VMware Workstation, Fusion, or Player.</p></li>
+<li><p>Start Micro.vmx in the virtual machine.</p>
+
+<p>The management console for your micro cloud displays several administrative options.</p>
+
+<p><img src="assets/images/screenshots/micro_fusion_start.jpg" title="fusion micro cloud start" alt="fusion micro cloud start" /></p></li>
+</ol>
+
+
+<h3>Connecting to a Micro Cloud</h3>
+
+<ol>
+<li><p>vmc target api.yourmicrocloudname.cloudfoundry.me</p>
+
+<p>This sets up the vmc connection to your micro cloud.</p></li>
+<li><p>vmc register; if you haven&#8217;t already done so during the installation and setup, otherwise skip this step.</p>
+
+<p>This establishes a user account for the new micro cloud on Cloud Foundry. You will prompted to input your email/username and a password.</p></li>
+<li><p>vmc login</p>
+
+<p>Provide your email address and password. Cloud Foundry will authenticate you.</p></li>
+</ol>
+
+
+<p>Now you are ready to create an application and push it up to the micro cloud at Cloud Foundry.</p>
+
+<h3>Creating an Application</h3>
+
+<p>If you have already created a simple Ruby application using Cloud Foundry, this will be quite familiar. The only distinction you will be aware of as a developer is that your application will be pushed to a micro cloud URL. In this example we do a simple <a href="http://www.sinatrarb.com/">Sinatra</a> application.</p>
+
+<ol>
+<li><p>Create a new directory, hello.</p></li>
+<li><p>In hello, create the file hello.rb</p></li>
+<li><p>Add this Ruby code to your file and save:</p>
+
+<pre><code>require 'rubygems' 
+require 'sinatra'  
+get '/' do 
+    "Hello from your Micro Cloud Foundry instance" 
+end
+</code></pre>
+
+<p><img src="assets/images/screenshots/micro_sina_hello.jpg" title="micro cloud app" alt="micro cloud app" /></p></li>
+<li><p>vmc push appname.</p>
+
+<p>Cloud foundry will prompt you for several cloud application settings.</p></li>
+<li><p>Select the defaults for each prompt:</p>
+
+<p><img src="assets/images/screenshots/micro_push.jpg" title="micro cloud push" alt="micro cloud push" /></p>
+
+<p><em>Note: if you already have an application called &#8216;hello&#8217; on Cloud Foundry, provide a different name or you will get an error.</em></p></li>
+<li><p>Go to the Micro Cloud Foundry URL for your application:</p>
+
+<p><img src="assets/images/screenshots/micro_vmc_hello.jpg" title="micro vmc hello" alt="micro vmc hello" /></p></li>
+</ol>
+
+
+<h2>Using Services with Micro Cloud Foundry</h2>
+
+<p>You can bind service to your application in a manner similar to all other Cloud Foundry applications. Supported services at Micro Cloud Foundry include:</p>
+
+<ul>
+<li><a href="http://www.mysql.com/">MySQL 5.1</a>, the open source relational database</li>
+<li><a href="http://www.mongodb.org/">MongoDB 1.8</a>, the scalable, open, document-based database</li>
+<li><a href="http://redis.io/">Redis 2.2</a>, the open key-value data structure server</li>
+</ul>
+
+
+<h3>Provisioning Services</h3>
+
+<p>To create a service in Micro Cloud Foundry, follow this process:</p>
+
+<ol>
+<li><p>Target your micro cloud: vmc target api.yourmicrocloud.cloudfoundry.me</p></li>
+<li><p>Login: vmc login</p></li>
+<li><p>Create the service: vmc create-service redis</p>
+
+<p><img src="assets/images/screenshots/mic_create_service.jpg" title="micro create service" alt="micro create service" /></p>
+
+<blockquote><p>When the Micro Cloud Foundry successfully provisions the service, it responds &#8216;OK.&#8217;</p></blockquote>
+
+<p><em>Note, in this example a Redis service is provisioned but you could substitute the mongodb or mysql to provision these other services</em></p></li>
+</ol>
+
+
+<h3>Binding Services</h3>
+
+<p>This examples shows a simple Ruby application using the Sinatra framework which reads and writes to a Redis data store.</p>
+
+<h4>Setting Up the Application</h4>
+
+<ol>
+<li><p>mkdir redis</p></li>
+<li><p>Create helloredis.rb</p></li>
+<li><p>Add dependent Gems to helloredis.rb</p>
+
+<pre><code>require 'rubygems'
+require 'sinatra'
+require 'thin'
+require 'json'
+require 'redis'
+</code></pre>
+
+<p><em>Notes: Micro Cloud Foundry by default uses the <a href="http://code.macournoyer.com/thin/">Thin</a> web server and is therefore required as a gem by your application in order for it to run. In this case we also require <a href="http://www.json.org/">JSON</a> to serialize credential information for the Redis service.</em></p></li>
+<li><p>Add a simple hello world output for the url (optional):</p>
+
+<pre><code>get '/' do
+    "Hello from your Micro Cloud Foundry instance"
+end
+</code></pre></li>
+</ol>
+
+
+<h4>Using the Redis Service</h4>
+
+<ol>
+<li><p>Add code to connect to Redis service:</p>
+
+<pre><code>configure do
+    services = JSON.parse(ENV['VCAP_SERVICES'])
+    redis_key = services.keys.select { |svc| svc =~ /redis/i }.first
+    redis = services[redis_key].first['credentials']
+    redis_conf = {:host =&gt; redis['hostname'], :port =&gt; redis['port'], :password =&gt; redis['password']}
+    @@redis = Redis.new redis_conf
+end 
+</code></pre>
+
+<p>We provide credentials to connect to the Redis service as environment variables under the key VCAP_SERVICES. The values are stored as JSON so we use the JSON parser in the first line to extract it.</p>
+
+<p>The last line creates a class variable @@redis which is available for all its subclasses in your application and will be used at runtime to add key/values to Redis.</p></li>
+<li><p>Add blocks to write parameters passed in a URL to Redis and to retrieve stored parameters:</p>
+
+<pre><code>get '/write/*/*' do
+    key=params[:splat][0]
+    value=params[:splat][1]
+    @@redis.set key, value
+end
+
+get '/read/:key' do |k|
+    @@redis.get k
+end
+</code></pre>
+
+<p>The first block will take parameters provided at the end of a &#8216;/write&#8217; url where the first parameter is assumed to be the key, and the second is the value, e.g. &#8216;appname.api.microcloudname.cloudfoundry.me/write/keytext/valuetext&#8217;</p></li>
+</ol>
+
+
+<h4>Deploy and Test an Application</h4>
+
+<ol>
+<li><p>Push the application to Micro Cloud Foundry: vmc push</p>
+
+<p>Micro Cloud Foundry will prompt you for information about your application.</p>
+
+<ul>
+<li><p>Answer &#8216;yes&#8217; to the prompt &#8220;Would you like to bind any services to &#8216;appname&#8217;&#8221;</p></li>
+<li><p>Answer &#8216;yes&#8217; (the default) for the question &#8220;Would you like to use an existing provisioned service&#8221;</p>
+
+<p><em>Note: in this case we use the Redis service established earlier in this guide.</em></p></li>
+<li><p>Select the number of the Redis service (in this example it is 3).</p></li>
+</ul>
+
+
+<p>Micro Cloud Foundry pushes your application to the targeted micro cloud and binds the existing service to your application:</p>
+
+<p><img src="assets/images/screenshots/micro_redis_pushed.jpg" title="micro service pushed" alt="micro service pushed" /></p></li>
+<li><p>Test the application on Micro Cloud Foundry:</p>
+
+<ul>
+<li><p>Open a browser to the url or curl appname.microname.cloudfoundry.me</p>
+
+<p><img src="assets/images/screenshots/micro_redis_hello.jpg" title="micro service hello" alt="micro service hello" /></p></li>
+<li><p>To write to Redis, open a browser to the url or curl with parameters: appname.microname.cloudfoundry.me/write/somekey/somevalue</p>
+
+<p><img src="assets/images/screenshots/micro_redis_write.jpg" title="micro service write" alt="micro service write" /></p></li>
+<li><p>To read from Redis, open a browser to the url or curl with parameters: appname.microname.cloudfoundry.me/read/somekey</p>
+
+<p><img src="assets/images/screenshots/micro_redis_read.jpg" title="micro service write" alt="micro service write" /></p></li>
+</ul>
+</li>
+</ol>
+
+
+<h2>Using Micro Cloud Foundry (STS)</h2>
+
+<p>For all Cloud Foundry development (conventional clouds or micro clouds) SpringSource Tool Suite (STS) has a plug you can use to manage and deploy your application on the cloud.</p>
+
+<p>This section describes how you use STS and the STS plugin to manage micro cloud applications.</p>
+
+<h3>Prerequisites</h3>
+
+<p>Be sure you have the following in place:</p>
+
+<ul>
+<li><p><a href="http://www.springsource.com/developer/sts">SpringSource STS</a> installed</p></li>
+<li><p>Cloud Foundry plugin for STS installed</p></li>
+<li><p>Micro Cloud Foundry VM installed, configured and powered on</p></li>
+<li><p>A domain name at <a href="https://cloudfoundry.com/micro/dns">Micro Cloud Foundry</a> established and the token noted.</p></li>
+</ul>
+
+
+<p><em>Note: For more information about the STS plugin, see &#8220;VMware Cloud Foundry for Eclipse and STS&#8221;</em></p>
+
+<h3>Adding a Micro Cloud to STS</h3>
+
+<ol>
+<li><p>In STS, right click in the Servers panel and select New > Server</p>
+
+<p><img src="assets/images/screenshots/sts_new_micsvr.jpg" title="sts micro new server" alt="sts micro new server" /></p>
+
+<blockquote><p>A wizard appears where you can create a new server for the micro cloud at Cloud foundry.</p></blockquote></li>
+<li><p>For server type, select VMware > Cloud Foundry</p>
+
+<p><img src="assets/images/screenshots/sts_servtype_mic.jpg" title="sts micro server type" alt="sts micro server type" /></p></li>
+<li><p>Enter your Cloud Foundry username and password.</p></li>
+<li><p>For URL, select Microcloud</p>
+
+<p><img src="assets/images/screenshots/sts_cred_micsvr.jpg" title="sts micro server credentials" alt="sts micro server credentials" /></p>
+
+<blockquote><p>A panel appears asking for your micro cloud name at Cloud Foundry.</p></blockquote></li>
+<li><p>Enter the domain/URL for your microcloud.</p>
+
+<p><img src="assets/images/screenshots/sts_micro_dns.jpg" title="sts micro server dns" alt="sts micro server dns" /></p></li>
+<li><p>Click OK.</p>
+
+<blockquote><p>The STS plug in will validate your credential for the micro cloud URL.</p></blockquote></li>
+<li><p>Click Finish.</p>
+
+<blockquote><p>The micro cloud at Cloud Foundry will appear in the Servers panel.</p></blockquote>
+
+<p><img src="assets/images/screenshots/sts_micsvr.jpg" title="sts micro server" alt="sts micro server" /></p></li>
+</ol>
+
+
+<h3>Creating an Application</h3>
+
+<ol>
+<li><p>In the STS Dashboard, click on Spring Template Project.</p>
+
+<p><img src="assets/images/screenshots/sts_spring_proj.jpg" title="sts spring project" alt="sts spring project" /></p>
+
+<blockquote><p>A New Template Project panel appears.</p></blockquote></li>
+<li><p>Select Spring MVC Project.</p>
+
+<p><img src="assets/images/screenshots/spring_mvc.jpg" title="sts spring mvc project" alt="sts spring mvc project" /></p></li>
+<li><p>Click Next.</p></li>
+<li><p>Provide:</p>
+
+<ul>
+<li>A Project Name.</li>
+<li>A top-level package.</li>
+</ul>
+
+
+<p><img src="assets/images/screenshots/sts_proj_name.jpg" title="sts spring project name" alt="sts spring project name" /></p></li>
+<li><p>Click Finish.</p></li>
+</ol>
+
+
+<h3>Deploying an Application</h3>
+
+<ol>
+<li><p>Open the Package Explorer and Servers tabs simultaneously.</p></li>
+<li><p>Drag your new project and drop it on the Cloud Foundry server.</p>
+
+<p><img src="assets/images/screenshots/sts_add_app.jpg" title="sts add app to cloud" alt="sts add app to cloud" /></p>
+
+<blockquote><p>An Applications panel appears.</p></blockquote></li>
+<li><p>Click Next.</p>
+
+<p><img src="assets/images/screenshots/sts_app_details.jpg" title="sts app details" alt="sts app details" /></p></li>
+<li><p>Note the Deployed URL.</p>
+
+<p><img src="assets/images/screenshots/sts_deploy_url.jpg" title="sts deploy url" alt="sts deploy url" /></p></li>
+<li><p>Click Finish.</p></li>
+<li><p>Check the deployed application:</p>
+
+<ul>
+<li><p>Open the noted URL in a browser, or</p></li>
+<li><p>Curl the noted URL</p></li>
+<li><p>In STS:</p>
+
+<ul>
+<li><p>Double-click the application name in the Servers Panel</p></li>
+<li><p>In the Applications tab, click on the Mapped URLs.</p></li>
+</ul>
+</li>
+</ul>
+
+
+<p><img src="assets/images/screenshots/sts_helloworld.jpg" title="sts micro hello world" alt="sts micro hello world" /></p></li>
+</ol>
+
+
+<h2>Tips and Trouble Shooting</h2>
+
+<p>Below are technical point to keep in mind should you run into any difficulties connecting to your micro cloud or if you are working offline.</p>
+
+<h3>Proxies</h3>
+
+<p>If you are using a proxy server you may have difficulties accessing your Micro Cloud virtual machine. Here are possible conditions:</p>
+
+<ul>
+<li><p>The proxy server cannot find the way back to the virtual machine, e.g. you are using Network Address Translation (NAT). In this case, exclude your domain from the proxy settings on your system.</p></li>
+<li><p>If you use a Virtual Private Network (VPN) while using bridged mode, then traffic in the virtual machine will not be able to connect and reach the proxy.</p></li>
+</ul>
+
+
+<h3>Accessing Micro Cloud Instances</h3>
+
+<p>There are occasions when your Micro Cloud virtual machine DNS entry is out of date and therefore you cannot connect.</p>
+
+<p>For instance if you attempt: vmc target api.mycloud.cloudfoundry.me, you may receive these two errors,</p>
+
+<ul>
+<li><p>&#8220;Host is not valid: &#8216;http://api.mycloud.cloudfoundry.me&#8217;&#8221;, and</p></li>
+<li><p>&#8220;HTTP exception: Errno::ETIMEDOUT:Operation timed out - connect&#8221;</p></li>
+</ul>
+
+
+<p>Check that you have the latest version of vmc:</p>
+
+<ul>
+<li><p>vmc -v</p></li>
+<li><p>If needed, update vmc: rvmsudo gem install vmc</p></li>
+</ul>
+
+
+<p><em><a href="http://beginrescueend.com/">Ruby Version Manager (RVM)</a> used here to update the vmc gem</em></p>
+
+<p>Check and update your DNS:</p>
+
+<ul>
+<li><p> Refresh your micro cloud console. You may see a DNS error for Identity:</p>
+
+<p><img src="assets/images/screenshots/micro_dns_error.jpg" title="micro dns error" alt="micro dns error" /></p></li>
+<li><p>Enter 2 to update the DNS.</p></li>
+</ul>
+
+
+<p>If you see a DNS &#8216;ok&#8217; message, the virtual machine has an IP address that matches the DNS.</p>
+
+<ol>
+<li><p>Check that you do not have a cached entry: host api.microcloudname.cloudfoundry.me</p></li>
+<li><p>If the DNS differs from your virtual machine IP address, flush the cache:</p>
+
+<ul>
+<li><p>Mac OSX: dscacheutil -flushcache</p></li>
+<li><p>Linux (Ubuntu): sudo /etc/init.d/nscd restart</p></li>
+<li><p>Windows: ipconfig /flushdns</p></li>
+</ul>
+</li>
+</ol>
+
+
+<h3>Switching Between Networks</h3>
+
+<p>If you switch between networks often but you do not need to make your Micro Cloud virtual machine available to others, we recommend you reconfigure the virtual machine networking to use NAT instead of the default bridged mode.</p>
+
+<h3>Debug Information</h3>
+
+<p>If you need help debugging:</p>
+
+<ol>
+<li><p>Enter 12 in the console.</p>
+
+<blockquote><p>The Micro Cloud virtual machine displays the debug menu.</p></blockquote>
+
+<p><img src="assets/images/screenshots/vmx_debug_menu.jpg" title="vmx demug menu" alt="vmx debug menu" /></p></li>
+<li><p>Select 1</p></li>
+<li><p>Log into the Micro Cloud virtual machine:</p>
+
+<ul>
+<li><p>Alt-F2, or</p></li>
+<li><p>Use ssh to login with your Micro Cloud virtual machine credentials.</p></li>
+</ul>
+</li>
+<li><p>Get the contents of /var/vcap/sys/log/micro/micro.log, and provide it with a help ticket.</p></li>
+</ol>
+
+
+<h3>Offline Development</h3>
+
+<p>To work without internet access you can configure your micro cloud to use vcap.me:</p>
+
+<ol>
+<li><p>Open the Micro Cloud virtual machine in Fusion.</p></li>
+<li><p>For the DNS press Enter</p></li>
+<li><p>Enter &#8216;Yes&#8217; for prompt: &#8220;Do you want to use vcap.me instead?&#8221;</p></li>
+<li><p>Note the IP address for the micro cloud, e.g. vcap@10</p></li>
+<li><p>Create a ssh connection between a new port and the micro cloud. At a command prompt:</p>
+
+<ul>
+<li><p>sudo ssh -L 80:10.21.165.34:80 vcap@10.21.165.34</p></li>
+<li><p>Enter your sudo password</p></li>
+<li><p>Enter your micro cloud password</p></li>
+</ul>
+</li>
+<li><p>Target your micro cloud: vmc target api.vcap.me</p></li>
+<li><p>Register and login:</p>
+
+<ul>
+<li><p>vmc register</p></li>
+<li><p>vmc login</p></li>
+</ul>
+</li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Karen Zeller</span></span>
+
+      
+
+
+
+
+<time datetime="2011-08-26 10:24:00 -0700" pubdate  updated >Aug 26<span>th</span>, 2011</time>
+
+
+
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yoursite.com/blog/2011/08/26/micro-cloud-foundry-getting-started/" data-via="" data-counturl="http://yoursite.com/blog/2011/08/26/micro-cloud-foundry-getting-started/" >Tweet</a>
+  
+  
+  <g:plusone size="medium"></g:plusone>
+  
+</div>
+
+    
+  </footer>
+</article>
+
+</div>
+
+<aside role=sidebar>
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/using-cloud-foundry-services/">Using Cloud Foundry Services</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/rails-and-sinatra-for-cloud-foundry/">Rails for Cloud Foundry</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/vmc-cheatsheet/">vmc: Cheatsheet</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/micro-cloud-readme/">Micro Cloud README</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/08/26/micro-cloud-foundry-getting-started/">Micro Cloud Foundry Getting Started</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer><p>
+  Copyright &copy; 2011 -  <span class="credit"><a href="http://cloudfoundry.com/">Cloud Foundry</a></span> -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+</body>
+</html>
